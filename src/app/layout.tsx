@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Next.js Template",
-  description: "A minimal Next.js starter template",
+  title: "RentFlow Uganda — Rental Management Platform",
+  description: "Uganda's trusted rental management platform. Track rent, manage tenants, send payment reminders, and list properties. Built for landlords in Mbarara and beyond.",
 };
 
 export default function RootLayout({
