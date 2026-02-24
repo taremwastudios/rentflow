@@ -67,7 +67,7 @@ export default async function VerificationsPage() {
         </div>
       ) : (
         <div className="space-y-6">
-          {pendingProfiles.map((profile) => (
+          {pendingProfiles.map((profile: typeof pendingProfiles[0]) => (
             <div key={profile.id} className="bg-white rounded-2xl border border-gray-100 p-6">
               <div className="flex items-start justify-between mb-5">
                 <div>

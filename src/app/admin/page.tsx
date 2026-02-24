@@ -113,7 +113,7 @@ export default async function AdminPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {recentLandlords.map((landlord) => (
+                {recentLandlords.map((landlord: typeof recentLandlords[0]) => (
                   <tr key={landlord.id} className="hover:bg-gray-50">
                     <td className="py-3 font-medium text-gray-900">{landlord.name}</td>
                     <td className="py-3 text-sm text-gray-600">{landlord.email}</td>

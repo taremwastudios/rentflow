@@ -112,7 +112,7 @@ Signed by both parties as indicated.`;
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               >
                 <option value="">Select tenant...</option>
-                {tenantList.map((t) => (
+                {tenantList.map((t: typeof tenantList[0]) => (
                   <option key={t.id} value={t.id}>
                     {t.firstName} {t.lastName} — {t.propertyTitle}, Unit {t.unitNumber}
                   </option>

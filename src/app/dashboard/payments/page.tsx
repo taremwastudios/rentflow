@@ -37,7 +37,7 @@ export default async function PaymentsPage() {
     .limit(50);
 
   const totalCollected = payments
-    .filter((p) => p.status === "paid")
+    .filter((p: typeof payments[0]) => p.status === "paid")
     .reduce((sum, p) => sum + p.amount, 0);
 
   const totalPending = payments

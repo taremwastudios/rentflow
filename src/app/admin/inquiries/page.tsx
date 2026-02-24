@@ -37,7 +37,7 @@ export default async function AdminInquiriesPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {allInquiries.map((inquiry) => (
+          {allInquiries.map((inquiry: typeof allInquiries[0]) => (
             <div key={inquiry.id} className="bg-white rounded-2xl border border-gray-100 p-5">
               <div className="flex items-start justify-between mb-3">
                 <div>

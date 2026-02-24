@@ -64,7 +64,7 @@ export default async function AgreementsPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {agreements.map((agreement) => (
+          {agreements.map((agreement: typeof agreements[0]) => (
             <div key={agreement.id} className="bg-white rounded-2xl border border-gray-100 p-6">
               <div className="flex items-start justify-between">
                 <div className="flex-1">

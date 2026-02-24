@@ -174,7 +174,7 @@ export default async function DashboardPage() {
             </div>
           ) : (
             <div className="space-y-3">
-              {data.recentPayments.map((payment) => (
+              {data.recentPayments.map((payment: typeof data.recentPayments[0]) => (
                 <div key={payment.id} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
                   <div>
                     <p className="text-sm font-medium text-gray-900">
@@ -231,7 +231,7 @@ export default async function DashboardPage() {
             </Link>
           </div>
           <div className="space-y-3">
-            {data.pendingReminders.map((reminder) => (
+            {data.pendingReminders.map((reminder: typeof data.pendingReminders[0]) => (
               <div key={reminder.id} className="flex items-start gap-3 p-3 bg-yellow-50 rounded-xl">
                 <span className="text-lg">🔔</span>
                 <div>
