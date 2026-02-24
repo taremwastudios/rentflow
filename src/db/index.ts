@@ -3,6 +3,7 @@ type MockDB = any;
 
 // Mock database for build time when no database is available
 // This allows the build to pass without requiring cloud DB credentials
+// Using mock DB for local development and testing
 const db: MockDB = {
   select: () => ({ 
     from: () => ({ 
