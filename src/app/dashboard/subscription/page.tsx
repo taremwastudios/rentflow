@@ -44,8 +44,8 @@ const plans = [
     id: 3,
     name: "Businessman",
     slug: "businessman",
-    priceMonthly: 5.99,
-    priceAnnually: 59.9,
+    priceMonthly: 22000,
+    priceAnnually: 220000,
     description: "For growing landlords",
     features: [
       "10 properties",
@@ -63,8 +63,8 @@ const plans = [
     id: 4,
     name: "Pro",
     slug: "pro",
-    priceMonthly: 9.25,
-    priceAnnually: 92.5,
+    priceMonthly: 34000,
+    priceAnnually: 340000,
     description: "Professional rental management",
     features: [
       "Unlimited properties",
@@ -83,9 +83,9 @@ const plans = [
     id: 5,
     name: "Estate / PAYG",
     slug: "estate",
-    priceMonthly: 15.89,
-    setupFee: 39.33,
-    priceAnnually: 0,
+    priceMonthly: 58000,
+    setupFee: 145000,
+    priceAnnually: 580000,
     description: "Pay as you go for large estates",
     features: [
       "Unlimited properties",
@@ -202,7 +202,7 @@ export default function SubscriptionPage() {
             <div className="text-gray-600">
               {currentPlan?.priceMonthly === 0
                 ? "Free forever"
-                : `$${currentPlan?.priceMonthly}/month`}
+                : `${currentPlan?.priceMonthly} UGX/month`}
             </div>
           </div>
           <div className="text-right">
@@ -267,10 +267,10 @@ export default function SubscriptionPage() {
 
                 <div className="mb-4">
                   <span className="text-2xl font-bold">
-                    ${plan.priceMonthly}
+                    {plan.priceMonthly}
                   </span>
                   {plan.priceMonthly > 0 && (
-                    <span className="text-gray-600">/month</span>
+                    <span className="text-gray-600"> UGX/month</span>
                   )}
                 </div>
 
@@ -375,21 +375,19 @@ export default function SubscriptionPage() {
                 </div>
               </div>
 
-              {/* Crypto Currency */}
+              {/* Mobile Money Options */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Payment Currency
+                  Payment Method
                 </label>
                 <select
                   value={cryptoCurrency}
                   onChange={(e) => setCryptoCurrency(e.target.value)}
                   className="w-full p-2 border border-gray-300 rounded-lg"
                 >
-                  {cryptos.map((crypto) => (
-                    <option key={crypto} value={crypto}>
-                      {crypto}
-                    </option>
-                  ))}
+                  <option value="MTN">MTN Mobile Money</option>
+                  <option value="Airtel">Airtel Money</option>
+                  <option value="Cash">Cash Payment</option>
                 </select>
               </div>
 
@@ -406,18 +404,17 @@ export default function SubscriptionPage() {
                 <div className="flex justify-between text-lg font-bold border-t pt-2">
                   <span>Total:</span>
                   <span>
-                    $
                     {billingCycle === "annually"
                       ? selectedPlan?.priceAnnually
                       : selectedPlan?.priceMonthly}
-                    /{billingCycle === "annually" ? "year" : "month"}
+                    UGX /{billingCycle === "annually" ? "year" : "month"}
                   </span>
                 </div>
               </div>
 
-              {/* Crypto Payment Notice */}
-              <div className="bg-purple-50 p-3 rounded-lg text-sm text-purple-800">
-                💳 You&apos;ll be redirected to NOWPayments to complete your crypto
+              {/* Mobile Money Notice */}
+              <div className="bg-green-50 p-3 rounded-lg text-sm text-green-800">
+                💳 You&apos;ll receive an MPesa prompt to complete your Mobile Money
                 payment securely.
               </div>
 
@@ -425,7 +422,7 @@ export default function SubscriptionPage() {
               <button
                 onClick={handlePayment}
                 disabled={processingPayment}
-                className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 {processingPayment
                   ? "Processing..."
