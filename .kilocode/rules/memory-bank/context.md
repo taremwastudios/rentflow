@@ -27,6 +27,7 @@ RentFlow Uganda is a complete cloud-based rental management platform for landlor
 - [x] **Admin panel** (overview stats, landlord verifications approve/reject, inquiries)
 - [x] **Public property detail page** with tenant contact form
 - [x] **Settings page** for profile management
+- [x] **Subscription/Pricing page** redesign with green/white branding, Uganda-localized descriptions, UGX pricing, and crypto/Mobile Money payment info
 
 ## Current Structure
 
