@@ -26,6 +26,7 @@ export default async function DashboardLayout({
     { href: "/dashboard/agreements", label: "Agreements", icon: "📄" },
     { href: "/dashboard/reminders", label: "Reminders", icon: "🔔" },
     { href: "/dashboard/verify", label: "Verification", icon: "✅" },
+    { href: "/dashboard/subscription", label: "Subscription", icon: "💳" },
     { href: "/dashboard/settings", label: "Settings", icon: "⚙️" },
   ];
 

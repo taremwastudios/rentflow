@@ -205,3 +205,62 @@ export const sessions = sqliteTable("sessions", {
   expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
   createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
 });
+
+// ─── Subscription Plans ──────────────────────────────────────────────────────
+export const subscriptionPlans = sqliteTable("subscription_plans", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(), // "Free", "Starter", "Businessman", "Pro", "Estate"
+  slug: text("slug").notNull().unique(), // "free", "starter", "businessman", "pro", "estate"
+  description: text("description"),
+  priceUsdMonthly: real("price_usd_monthly").notNull().default(0),
+  priceUsdAnnually: real("price_usd_annually"),
+  setupFeeUsd: real("setup_fee_usd").notNull().default(0),
+  features: text("features").notNull(), // JSON array of features
+  propertyLimit: integer("property_limit").notNull(), // -1 for unlimited
+  unitLimit: integer("unit_limit").notNull(), // -1 for unlimited
+  storageGb: real("storage_gb").notNull().default(1),
+  prioritySupport: integer("priority_support", { mode: "boolean" }).notNull().default(false),
+  priorityMultiplier: real("priority_multiplier").notNull().default(1), // for featured listings
+  isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+});
+
+// ─── User Subscriptions ───────────────────────────────────────────────────────
+export const subscriptions = sqliteTable("subscriptions", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  planId: integer("plan_id").notNull().references(() => subscriptionPlans.id),
+  status: text("status", {
+    enum: ["active", "expired", "cancelled", "pending", "paused"],
+  }).notNull().default("pending"),
+  startedAt: integer("started_at", { mode: "timestamp" }),
+  expiresAt: integer("expires_at", { mode: "timestamp" }),
+  billingCycle: text("billing_cycle", { enum: ["monthly", "annually"] }).notNull().default("monthly"),
+  nowpaymentsPaymentId: text("nowpayments_payment_id"), // for tracking crypto payments
+  autoRenew: integer("auto_renew", { mode: "boolean" }).notNull().default(true),
+  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+});
+
+// ─── Platform Payments (NOWPayments crypto) ───────────────────────────────────
+export const platformPayments = sqliteTable("platform_payments", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("user_id").notNull().references(() => users.id),
+  subscriptionId: integer("subscription_id").references(() => subscriptions.id),
+  planId: integer("plan_id").references(() => subscriptionPlans.id),
+  amountUsd: real("amount_usd").notNull(),
+  cryptoAmount: real("crypto_amount"),
+  currency: text("currency").notNull(), // crypto currency (BTC, ETH, USDT, etc.)
+  nowpaymentsPaymentId: text("nowpayments_payment_id").notNull().unique(),
+  nowpaymentsOrderId: text("nowpayments_order_id"),
+  paymentStatus: text("payment_status", {
+    enum: ["waiting", "confirming", "confirmed", "finished", "failed", "expired", "refunded"],
+  }).notNull().default("waiting"),
+  payAddress: text("pay_address"), // crypto wallet address to pay to
+  ipnData: text("ipn_data"), // JSON data from IPN webhook
+  paymentUrl: text("payment_url"), // NOWPayments checkout URL
+  type: text("type", { enum: ["subscription", "setup_fee", "upgrade"] }).notNull().default("subscription"),
+  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+});
