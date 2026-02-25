@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-// Removed unused imports: getSession, db, users, landlordProfiles, eq, redirect
-// Removed unused function: updateProfile (will be replaced by client-side logic or API call)
+// Removed unused server-side imports: getSession, db, users, landlordProfiles, eq, redirect
+// Removed server action stub: updateProfile
 import Link from "next/link";
 
 const THEME_STORAGE_KEY = "rentflow-theme";
@@ -32,7 +32,7 @@ interface MockProfile {
   // Add other profile fields if necessary
 }
 
-function SettingsPageContent() {
+function SettingsPage() { // Renamed from SettingsPageContent, making this the default export
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [profile, setProfile] = useState<MockProfile | null>(null);
   const [session, setSession] = useState<MockSession | null>(null);
@@ -79,8 +79,6 @@ function SettingsPageContent() {
       } catch (fetchError: any) {
         console.error("Error fetching settings data:", fetchError.message || fetchError);
         setError("Failed to load settings. Please check your connection or try again later.");
-        // Optionally redirect to login if session fetch fails critically
-        // window.location.href = "/login";
       } finally {
         setLoading(false);
       }
@@ -96,14 +94,13 @@ function SettingsPageContent() {
     localStorage.setItem(THEME_STORAGE_KEY, newTheme);
   }, []);
 
-  // Placeholder for the actual server action call or client-side update
+  // Placeholder for profile update logic. In a real app, this would call an API route.
   const handleUpdateProfile = async (formData: FormData) => {
     console.log("Simulating profile update from client...");
-    // In a real app, this would call an API route or a server action.
-    // For now, we'll just simulate a success and update local state if needed.
-    // Since profile and session are fetched client-side, we'd update local state here.
-    // This requires more complex state management if we want immediate UI feedback.
+    // This would typically involve a fetch to an API route like /api/profile/update
+    // For now, we simulate a success alert.
     alert("Profile updated (simulated)!");
+    // To reflect changes, you might refetch data or update local state.
   };
 
   if (loading) {
@@ -122,14 +119,12 @@ function SettingsPageContent() {
     );
   }
 
-  // If session is not loaded or invalid, redirect
   if (!session || !session.user) {
-    // This case should ideally be handled by the initial fetch's redirect,
-    // but as a fallback, we can redirect here too.
+    // Redirect to login if session is invalid or not found
     if (typeof window !== 'undefined') {
        window.location.href = "/login";
     }
-    return null; // Or a loading indicator
+    return null; 
   }
 
   return (
@@ -173,7 +168,8 @@ function SettingsPageContent() {
       {/* Profile */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 mb-6">
         <h2 className="font-semibold text-gray-900 dark:text-white mb-5">Profile Information</h2>
-        <form action={handleUpdateProfile} className="space-y-4">
+        {/* Using a placeholder for form submission. In a real app, this would call an API route. */}
+        <form onSubmit={(e) => { e.preventDefault(); handleUpdateProfile(new FormData(e.currentTarget)); }} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Full Name</label>
             <input
