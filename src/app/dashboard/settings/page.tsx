@@ -1,105 +1,43 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { getSession } from "@/lib/auth";
-import { db } from "@/db";
-import { users, landlordProfiles } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { redirect } from "next/navigation";
+// Removed unused imports: getSession, db, users, landlordProfiles, eq, redirect
+// Removed unused function: updateProfile (will be replaced by client-side logic or API call)
 import Link from "next/link";
 
-// Dummy function to simulate server action for profile update
-async function updateProfile(formData: FormData) {
-  // This is a placeholder. In a real app, this would interact with the database.
-  // For now, we'll just simulate a redirect.
-  console.log("Simulating profile update...");
-  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
-  
-  // Mock redirect, in a real server action this would be `redirect()`
-  // For client component simulation, we might handle this differently or use a hook
-  // Since the original was a server action, let's keep the redirect but acknowledge it's server-side.
-  // For this client component, we'll need to ensure this action can be called correctly.
-  // For now, we assume it works if called from a form action.
-  
-  // Simulate server action behavior if this were a server component or called from one
-  // In a pure client component context, we'd use an API route or different auth pattern
-  // For now, let's proceed with the assumption that this would function correctly
-  // if the form submission mechanism is properly set up.
-  // In a real app: redirect("/dashboard/settings");
-  console.log("Profile update simulated. Redirect would occur here.");
-}
-
-// Theme toggling logic
 const THEME_STORAGE_KEY = "rentflow-theme";
 
-function ThemeToggle() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
-
-  useEffect(() => {
-    const root = window.document.documentElement;
-    const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) as "light" | "dark" | null;
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    
-    const initialTheme = storedTheme || systemTheme || 'light';
-    setTheme(initialTheme);
-    root.classList.toggle('dark', initialTheme === 'dark');
-  }, []);
-
-  const toggleTheme = useCallback((newTheme: "light" | "dark") => {
-    setTheme(newTheme);
-    const root = window.document.documentElement;
-    root.classList.toggle('dark', newTheme === 'dark');
-    localStorage.setItem(THEME_STORAGE_KEY, newTheme);
-  }, []);
-
-  return (
-    <div className="flex items-center gap-4">
-      <label htmlFor="theme-toggle" className="text-sm font-medium text-gray-700">Theme</label>
-      <div className="flex gap-2 p-1 bg-gray-100 dark:bg-gray-700 rounded-full">
-        <button
-          onClick={() => toggleTheme('light')}
-          className={`py-1 px-4 rounded-full text-xs font-bold transition-all ${
-            theme === 'light' ? 'bg-white text-gray-900 dark:bg-gray-800 dark:text-white shadow' : 'text-gray-500'
-          }`}
-        >
-          Light
-        </button>
-        <button
-          onClick={() => toggleTheme('dark')}
-          className={`py-1 px-4 rounded-full text-xs font-bold transition-all ${
-            theme === 'dark' ? 'bg-gray-800 text-white dark:bg-gray-200 dark:text-gray-900 shadow' : 'text-gray-500'
-          }`}
-        >
-          Dark
-        </button>
-      </div>
-    </div>
-  );
+// Mock data structures matching API responses
+interface MockSession {
+  user: {
+    id: number;
+    name: string;
+    email: string;
+    role: "admin" | "landlord" | "tenant";
+    avatarUrl: string | null;
+  };
+  session: {
+    id: string;
+    userId: number;
+    expiresAt: Date;
+    createdAt: Date;
+  };
 }
 
-// Make the main component client-side to use hooks and localStorage
-export default function SettingsPageWrapper() {
-  // This wrapper fetches server-side data and passes it to the client component
-  // For simplicity in this example, we'll fetch all data client-side if needed,
-  // but a better pattern would be to pass down props from a server component.
-  // Given the request is to 'carefully' modify, let's make the whole page client-side
-  // for easier theme integration if the original structure allows it.
-
-  // Re-evaluating: The original page was async, implying server-side.
-  // To add client-side theme toggling without breaking existing server functionality,
-  // we should create a nested client component for the interactive parts.
-  
-  // For now, let's convert the entire page to client for simplicity of theme integration.
-  // A more complex app would separate concerns.
-  return <SettingsPageContent />;
+interface MockProfile {
+  id: number;
+  userId: number;
+  verificationStatus: "pending" | "under_review" | "approved" | "rejected";
+  phone: string | null;
+  // Add other profile fields if necessary
 }
 
-// Client-side content
 function SettingsPageContent() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const [profile, setProfile] = useState<any>(null);
-  const [session, setSession] = useState<any>(null);
+  const [profile, setProfile] = useState<MockProfile | null>(null);
+  const [session, setSession] = useState<MockSession | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -110,31 +48,46 @@ function SettingsPageContent() {
     setTheme(initialTheme);
     root.classList.toggle('dark', initialTheme === 'dark');
 
-    // Fetch session and profile data client-side for this example
     const fetchData = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        // Simulate fetching session and profile data
-        const fetchedSession = await fetch('/api/auth/session').then(res => res.json()); // Assuming an API route for session
+        console.log("Fetching session data...");
+        const sessionResponse = await fetch('/api/auth/session');
+        if (!sessionResponse.ok) {
+          throw new Error(`HTTP error! status: ${sessionResponse.status}`);
+        }
+        const fetchedSession: MockSession = await sessionResponse.json();
+        
         if (!fetchedSession.user) {
-          window.location.href = "/login"; // Redirect if not logged in
+          console.warn("No user found in session, redirecting to login.");
+          window.location.href = "/login";
           return;
         }
         setSession(fetchedSession);
+        console.log("Session fetched successfully.");
 
-        const fetchedProfile = await fetch('/api/profile').then(res => res.json()); // Assuming an API route for profile
+        console.log("Fetching profile data...");
+        const profileResponse = await fetch('/api/profile');
+        if (!profileResponse.ok) {
+          throw new Error(`HTTP error! status: ${profileResponse.status}`);
+        }
+        const fetchedProfile: MockProfile = await profileResponse.json();
         setProfile(fetchedProfile);
+        console.log("Profile fetched successfully.");
 
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        // Handle error appropriately, e.g., redirect to login
-        window.location.href = "/login";
+      } catch (fetchError: any) {
+        console.error("Error fetching settings data:", fetchError.message || fetchError);
+        setError("Failed to load settings. Please check your connection or try again later.");
+        // Optionally redirect to login if session fetch fails critically
+        // window.location.href = "/login";
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
 
-  }, []);
+    fetchData();
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   const toggleTheme = useCallback((newTheme: "light" | "dark") => {
     setTheme(newTheme);
@@ -143,21 +96,40 @@ function SettingsPageContent() {
     localStorage.setItem(THEME_STORAGE_KEY, newTheme);
   }, []);
 
-  // Placeholder for the actual server action call
+  // Placeholder for the actual server action call or client-side update
   const handleUpdateProfile = async (formData: FormData) => {
-    // In a real app, this would call your server action (e.g., via an API route)
     console.log("Simulating profile update from client...");
-    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
+    // In a real app, this would call an API route or a server action.
+    // For now, we'll just simulate a success and update local state if needed.
+    // Since profile and session are fetched client-side, we'd update local state here.
+    // This requires more complex state management if we want immediate UI feedback.
     alert("Profile updated (simulated)!");
-    // You'd likely refetch or update local state here
   };
 
-  if (loading || !session) {
+  if (loading) {
     return (
       <div className="p-6 max-w-2xl mx-auto flex items-center justify-center h-64">
         <div className="text-lg text-gray-600">Loading settings...</div>
       </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6 max-w-2xl mx-auto flex items-center justify-center h-64">
+        <div className="text-lg text-red-600">{error}</div>
+      </div>
+    );
+  }
+
+  // If session is not loaded or invalid, redirect
+  if (!session || !session.user) {
+    // This case should ideally be handled by the initial fetch's redirect,
+    // but as a fallback, we can redirect here too.
+    if (typeof window !== 'undefined') {
+       window.location.href = "/login";
+    }
+    return null; // Or a loading indicator
   }
 
   return (
@@ -201,7 +173,6 @@ function SettingsPageContent() {
       {/* Profile */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 mb-6">
         <h2 className="font-semibold text-gray-900 dark:text-white mb-5">Profile Information</h2>
-        {/* Using a simplified form submission for demonstration. In a real app, this would call a server action or API route */}
         <form action={handleUpdateProfile} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Full Name</label>
