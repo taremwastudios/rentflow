@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-// Removed unused server-side imports: getSession, db, users, landlordProfiles, eq, redirect
-// Removed server action stub: updateProfile
 import Link from "next/link";
 
 const THEME_STORAGE_KEY = "rentflow-theme";
@@ -29,10 +27,9 @@ interface MockProfile {
   userId: number;
   verificationStatus: "pending" | "under_review" | "approved" | "rejected";
   phone: string | null;
-  // Add other profile fields if necessary
 }
 
-function SettingsPage() { // Renamed from SettingsPageContent, making this the default export
+export default function SettingsPage() { // Directly export the client component
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [profile, setProfile] = useState<MockProfile | null>(null);
   const [session, setSession] = useState<MockSession | null>(null);
@@ -98,9 +95,8 @@ function SettingsPage() { // Renamed from SettingsPageContent, making this the d
   const handleUpdateProfile = async (formData: FormData) => {
     console.log("Simulating profile update from client...");
     // This would typically involve a fetch to an API route like /api/profile/update
-    // For now, we simulate a success alert.
     alert("Profile updated (simulated)!");
-    // To reflect changes, you might refetch data or update local state.
+    // To reflect changes, you might refetch or update local state.
   };
 
   if (loading) {
@@ -128,7 +124,6 @@ function SettingsPage() { // Renamed from SettingsPageContent, making this the d
   }
 
   return (
-    // Apply dark theme classes to the main container for demonstration
     <div className="p-6 max-w-2xl mx-auto bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-700">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
