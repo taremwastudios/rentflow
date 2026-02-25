@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server';
+
 export async function GET() {
   // In a real app, this would fetch the session from cookies/DB.
   // For now, we return mock session data.
@@ -16,10 +18,5 @@ export async function GET() {
       createdAt: new Date(),
     },
   };
-  return new Response(JSON.stringify(mockSession), {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  return NextResponse.json(mockSession);
 }
