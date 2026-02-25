@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "RentFlow Uganda — Rental Management Platform",
   description: "Uganda's trusted rental management platform. Track rent, manage tenants, send payment reminders, and list properties. Built for landlords in Mbarara and beyond.",
   icons: {
-    icon: "/icon.svg",
+    icon: "/favicon.svg",
   },
 };
 
@@ -31,20 +31,22 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              try {
-                const theme = localStorage.getItem('rentflow-theme') || 'light';
-                if (theme === 'dark') {
-                  document.documentElement.classList.add('dark');
-                } else {
-                  document.documentElement.classList.remove('dark');
-                }
-              } catch (e) {}
+              (function() {
+                try {
+                  const theme = localStorage.getItem('rentflow-theme') || 'light';
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (e) {}
+              })()
             `,
           }}
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200`}
       >
         {children}
       </body>
