@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
+  console.log("GET /api/auth/session called");
   // In a real app, this would fetch the session from cookies/DB.
   // For now, we return mock session data.
   const mockSession = {
