@@ -61,39 +61,60 @@ export async function loginUser(formData: FormData): Promise<void> {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
+  console.log(`🔑 Login attempt for: ${email}`);
+
   if (!email || !password) {
     throw new Error("Email and password are required");
   }
 
-  const passwordHash = hashPassword(password);
+  try {
+    const passwordHash = hashPassword(password);
+    console.log("🔍 Querying database for user...");
 
-  const result = await db
-    .select()
-    .from(users)
-    .where(eq(users.email, email))
-    .limit(1);
+    const result = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, email))
+      .limit(1);
 
-  if (!result.length || result[0].passwordHash !== passwordHash) {
-    throw new Error("Invalid email or password");
-  }
+    if (!result.length) {
+      console.warn(`❌ Login failed: User not found for ${email}`);
+      throw new Error("Invalid email or password");
+    }
 
-  const user = result[0];
-  const sessionId = await createSession(user.id);
-  const cookieStore = await cookies();
-  cookieStore.set("session", sessionId, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: 30 * 24 * 60 * 60,
-    path: "/",
-  });
+    if (result[0].passwordHash !== passwordHash) {
+      console.warn(`❌ Login failed: Incorrect password for ${email}`);
+      throw new Error("Invalid email or password");
+    }
 
-  if (user.role === "admin") {
-    redirect("/admin");
-  } else if (user.role === "landlord") {
-    redirect("/dashboard");
-  } else {
-    redirect("/");
+    const user = result[0];
+    console.log(`✅ User found: ${user.name} (Role: ${user.role})`);
+
+    console.log("📝 Creating session...");
+    const sessionId = await createSession(user.id);
+    
+    console.log("🍪 Setting session cookie...");
+    const cookieStore = await cookies();
+    cookieStore.set("session", sessionId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60,
+      path: "/",
+    });
+
+    console.log(`🚀 Redirecting ${user.role} to appropriate page...`);
+    if (user.role === "admin") {
+      redirect("/admin");
+    } else if (user.role === "landlord") {
+      redirect("/dashboard");
+    } else {
+      redirect("/");
+    }
+  } catch (error: any) {
+    if (error.message === "NEXT_REDIRECT") throw error; // Allow Next.js redirect to work
+    console.error("💥 Login Action Error:", error.message || error);
+    throw new Error(error.message || "An unexpected error occurred during login");
   }
 }
 
