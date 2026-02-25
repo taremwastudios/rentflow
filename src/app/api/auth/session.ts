@@ -1,1 +1,25 @@
-export default function handler(req, res) { res.status(200).json({ user: { id: 1, name: "Demo User", email: "user@demo.com", role: "landlord" } }); }
+export async function GET() {
+  // In a real app, this would fetch the session from cookies/DB.
+  // For now, we return mock session data.
+  const mockSession = {
+    user: {
+      id: 1,
+      name: "Demo User",
+      email: "user@demo.com",
+      role: "landlord",
+      avatarUrl: null,
+    },
+    session: {
+      id: "mock-session-id",
+      userId: 1,
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Expires in 30 days
+      createdAt: new Date(),
+    },
+  };
+  return new Response(JSON.stringify(mockSession), {
+    status: 200,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}
