@@ -31,7 +31,7 @@ interface MockProfile {
 }
 
 export default function SettingsPage() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark' | null>(null); // Start as null to avoid mismatch
   const [profile, setProfile] = useState<MockProfile | null>(null);
   const [session, setSession] = useState<MockSession | null>(null);
   const [loading, setLoading] = useState(true);
@@ -39,13 +39,12 @@ export default function SettingsPage() {
   const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
-    // Initialize theme from localStorage or system preference
+    // Initialize theme
     const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) as 'light' | 'dark' | null;
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    const initialTheme = storedTheme || systemTheme || 'light';
+    const initialTheme = storedTheme || 'light';
     setTheme(initialTheme);
     
-    // Explicitly sync the class on mount
+    // Sync class
     if (initialTheme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
@@ -86,7 +85,6 @@ export default function SettingsPage() {
     setTheme(newTheme);
     localStorage.setItem(THEME_STORAGE_KEY, newTheme);
     
-    // Apply class to documentElement for global support
     if (newTheme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
@@ -115,11 +113,11 @@ export default function SettingsPage() {
     }
   };
 
-  if (loading) {
+  if (loading || theme === null) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
         <div className="w-10 h-10 border-2 border-emerald-100 border-t-emerald-600 rounded-full animate-spin"></div>
-        <p className="text-slate-400 font-bold text-xs uppercase tracking-widest">Loading Settings</p>
+        <p className="text-slate-400 font-bold text-xs uppercase tracking-widest transition-colors">Loading Settings</p>
       </div>
     );
   }
@@ -129,7 +127,7 @@ export default function SettingsPage() {
       <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
         <div className="text-4xl">⚠️</div>
         <p className="text-red-500 font-bold">{error}</p>
-        <button onClick={() => window.location.reload()} className="text-emerald-600 font-bold hover:underline">Try Again</button>
+        <button onClick={() => window.location.reload()} className="text-emerald-600 font-bold hover:underline transition-colors">Try Again</button>
       </div>
     );
   }
@@ -138,23 +136,23 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      <div className="px-2">
-        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight transition-colors">Settings</h1>
+      <div className="px-2 transition-colors">
+        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Settings</h1>
         <p className="text-slate-500 dark:text-emerald-500/60 mt-1 font-medium text-sm">Manage your personal preferences and account security</p>
       </div>
 
       {/* Appearance Section */}
-      <div className="bg-white dark:bg-slate-950 rounded-xl border border-slate-100 dark:border-emerald-500/20 p-6 shadow-sm dark:shadow-none transition-colors">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="bg-white dark:bg-slate-950 rounded-lg border border-slate-100 dark:border-emerald-500/20 p-6 shadow-sm transition-colors">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 transition-colors">
           <div>
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white transition-colors">Appearance</h2>
-            <p className="text-slate-400 dark:text-emerald-500/40 text-xs font-medium transition-colors">Customize how RentFlow looks on your device</p>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white">Appearance</h2>
+            <p className="text-slate-400 dark:text-emerald-500/40 text-xs font-medium">Customize how RentFlow looks on your device</p>
           </div>
           
-          <div className="flex p-1 bg-slate-100 dark:bg-slate-900 rounded-xl w-fit transition-colors border dark:border-emerald-500/20">
+          <div className="flex p-1 bg-slate-100 dark:bg-slate-900 rounded-lg w-fit border dark:border-emerald-500/20 transition-colors">
             <button
               onClick={() => toggleTheme('light')}
-              className={`flex items-center space-x-2 px-5 py-2 rounded-lg font-bold text-xs transition-all ${
+              className={`flex items-center space-x-2 px-5 py-2 rounded-md font-bold text-xs transition-all ${
                 theme === 'light' 
                   ? 'bg-white text-slate-900 shadow-sm' 
                   : 'text-slate-400 hover:text-slate-600 dark:text-emerald-500/40 dark:hover:text-emerald-400'
@@ -165,9 +163,9 @@ export default function SettingsPage() {
             </button>
             <button
               onClick={() => toggleTheme('dark')}
-              className={`flex items-center space-x-2 px-5 py-2 rounded-lg font-bold text-xs transition-all ${
+              className={`flex items-center space-x-2 px-5 py-2 rounded-md font-bold text-xs transition-all ${
                 theme === 'dark' 
-                  ? 'bg-emerald-600 text-white shadow-emerald-500/20 shadow-lg' 
+                  ? 'bg-emerald-600 text-white shadow-emerald-500/20 shadow-md' 
                   : 'text-slate-400 hover:text-slate-600 dark:text-emerald-500/40 dark:hover:text-emerald-400'
               }`}
             >
@@ -179,9 +177,9 @@ export default function SettingsPage() {
       </div>
 
       {/* Profile Information */}
-      <div className="bg-white dark:bg-slate-950 rounded-xl border border-slate-100 dark:border-emerald-500/20 p-6 shadow-sm dark:shadow-none transition-colors">
+      <div className="bg-white dark:bg-slate-950 rounded-lg border border-slate-100 dark:border-emerald-500/20 p-6 shadow-sm transition-colors">
         <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-6 transition-colors">Profile Information</h2>
-        <form action={handleUpdateProfile} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form action={handleUpdateProfile} className="grid grid-cols-1 md:grid-cols-2 gap-6 transition-colors">
           <div className="space-y-1.5">
             <label className="text-[10px] font-black text-slate-400 dark:text-emerald-500 uppercase tracking-widest ml-1 transition-colors">Full Name</label>
             <input
@@ -189,36 +187,36 @@ export default function SettingsPage() {
               type="text"
               defaultValue={session.user.name}
               required
-              className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-emerald-500/20 rounded-xl text-slate-900 dark:text-white text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 dark:placeholder:text-emerald-900"
+              className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-emerald-500/20 rounded-lg text-slate-900 dark:text-white text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 dark:placeholder:text-emerald-900"
             />
           </div>
           
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 transition-colors">
             <label className="text-[10px] font-black text-slate-400 dark:text-emerald-500 uppercase tracking-widest ml-1 transition-colors">Email (Primary)</label>
             <input
               type="email"
-              value={session.user.email}
+              value={session.user.email.toLowerCase()}
               disabled
-              className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-900/50 border border-slate-200 dark:border-emerald-500/10 rounded-xl text-slate-400 dark:text-emerald-500/30 text-sm font-bold cursor-not-allowed transition-colors"
+              className="w-full px-4 py-2.5 bg-slate-100 dark:bg-slate-900/50 border border-slate-200 dark:border-emerald-500/10 rounded-lg text-slate-400 dark:text-emerald-500/30 text-sm font-bold cursor-not-allowed transition-colors"
             />
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 transition-colors">
             <label className="text-[10px] font-black text-slate-400 dark:text-emerald-500 uppercase tracking-widest ml-1 transition-colors">Phone Number</label>
             <input
               name="phone"
               type="tel"
               placeholder="+256 700 000 000"
               defaultValue={profile?.phone || ""}
-              className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-emerald-500/20 rounded-xl text-slate-900 dark:text-white text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 dark:placeholder:text-emerald-900"
+              className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-emerald-500/20 rounded-lg text-slate-900 dark:text-white text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 dark:placeholder:text-emerald-900"
             />
           </div>
 
-          <div className="md:col-span-2 pt-2">
+          <div className="md:col-span-2 pt-2 transition-colors">
             <button
               type="submit"
               disabled={isUpdating}
-              className="px-8 py-3 bg-emerald-600 text-white rounded-xl text-sm font-bold hover:bg-emerald-700 transition-all active:scale-95 shadow-none disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-8 py-2.5 bg-emerald-600 text-white rounded-lg text-xs font-black uppercase tracking-widest hover:bg-emerald-700 transition-all active:scale-95 shadow-none disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isUpdating ? "Updating..." : "Update Profile"}
             </button>
@@ -227,10 +225,10 @@ export default function SettingsPage() {
       </div>
 
       {/* Danger Zone */}
-      <div className="bg-red-50/50 dark:bg-red-500/5 rounded-xl border border-red-100 dark:border-red-500/20 p-6 transition-colors">
+      <div className="bg-red-50/50 dark:bg-red-500/5 rounded-lg border border-red-100 dark:border-red-500/20 p-6 transition-colors">
         <h2 className="text-lg font-bold text-red-600 dark:text-red-500 mb-1 transition-colors">Danger Zone</h2>
         <p className="text-slate-500 dark:text-slate-500 text-xs font-medium mb-4 transition-colors">Permanently delete your account and all associated data</p>
-        <button className="px-6 py-2.5 border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-500 rounded-lg font-bold text-xs hover:bg-red-600 hover:text-white transition-all">
+        <button className="px-6 py-2 border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-500 rounded-lg font-black text-[10px] uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all active:scale-95">
           Delete Account
         </button>
       </div>

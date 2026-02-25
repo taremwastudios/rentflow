@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "RentFlow Uganda — Rental Management Platform",
   description: "Uganda's trusted rental management platform. Track rent, manage tenants, send payment reminders, and list properties. Built for landlords in Mbarara and beyond.",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

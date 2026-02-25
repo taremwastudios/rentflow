@@ -53,7 +53,7 @@ export default async function DashboardLayout({
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{session.user.name}</p>
-              <p className="text-[10px] font-bold text-slate-400 dark:text-emerald-500/60 truncate uppercase tracking-wider">{session.user.email}</p>
+              <p className="text-[10px] font-bold text-slate-400 dark:text-emerald-500/60 truncate uppercase tracking-wider">{session.user.email.toLowerCase()}</p>
             </div>
           </div>
         </div>
