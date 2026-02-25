@@ -109,276 +109,200 @@ export default function PricingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-100">
-      {/* Header */}
-      <header className="bg-white shadow-md border-b border-green-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <Link href="/" className="text-2xl font-bold text-green-600">
-              RentFlow
-            </Link>
-            <span className="text-sm text-green-700 font-medium">Uganda</span>
-          </div>
-          <nav className="flex space-x-4">
-            <Link href="/login" className="text-gray-600 hover:text-green-600 font-medium">
-              Login
-            </Link>
+    <div className="min-h-screen bg-[#FDFDFD] text-slate-900 font-sans">
+      {/* Navigation - Simplified for clean look */}
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-emerald-50">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <Link href="/" className="flex items-center space-x-2 group">
+            <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center group-hover:rotate-12 transition-transform">
+              <span className="text-white font-bold text-xl">R</span>
+            </div>
+            <span className="text-2xl font-bold tracking-tight text-slate-800">Rent<span className="text-emerald-600">Flow</span></span>
+          </Link>
+          <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600">
+            <Link href="/" className="hover:text-emerald-600 transition-colors">Home</Link>
+            <Link href="/properties" className="hover:text-emerald-600 transition-colors">Properties</Link>
+            <Link href="/login" className="hover:text-emerald-600 transition-colors">Sign In</Link>
             <Link
               href="/register"
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 font-medium"
+              className="bg-emerald-600 text-white px-5 py-2.5 rounded-full hover:bg-emerald-700 transition-all hover:shadow-lg hover:shadow-emerald-200 active:scale-95"
             >
-              Get Started
+              Start Free Trial
             </Link>
           </nav>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="py-16 text-center px-4">
-        <div className="max-w-3xl mx-auto">
-          <div className="inline-flex items-center bg-green-100 text-green-700 px-4 py-1 rounded-full text-sm font-medium mb-6">
-            <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-            Trusted by 500+ Ugandan Landlords
+      <section className="relative pt-20 pb-16 overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 opacity-30">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-200 rounded-full blur-[120px]"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-green-100 rounded-full blur-[120px]"></div>
+        </div>
+        
+        <div className="max-w-4xl mx-auto text-center px-6">
+          <div className="inline-flex items-center space-x-2 bg-emerald-50 border border-emerald-100 px-4 py-1.5 rounded-full text-emerald-700 text-xs font-bold tracking-wider uppercase mb-8">
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>Scale your rental empire</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Simple, Transparent <span className="text-green-600">Uganda Pricing</span>
+          <h1 className="text-5xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight">
+            Plans for every <span className="text-emerald-600">landlord.</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            No hidden fees. No surprise charges. Just powerful rental management 
-            built specifically for Ugandan landlords.
+          <p className="text-lg text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+            Simple, transparent pricing tailored for the Ugandan market. 
+            From single units in Mbarara to massive estates in Kampala.
           </p>
-          <div className="flex justify-center gap-4 text-sm text-gray-500">
-            <span className="flex items-center">
-              <span className="text-green-500 mr-1">✓</span> No credit card required for Free
-            </span>
-            <span className="flex items-center">
-              <span className="text-green-500 mr-1">✓</span> Cancel anytime
-            </span>
-            <span className="flex items-center">
-              <span className="text-green-500 mr-1">✓</span> 30-day money back
-            </span>
-          </div>
         </div>
       </section>
 
       {/* Pricing Cards */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+      <section className="max-w-[1400px] mx-auto px-6 pb-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
           {plans.map((plan) => (
             <div
               key={plan.slug}
-              className={`bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 ${
+              className={`relative flex flex-col bg-white rounded-[2rem] transition-all duration-500 hover:-translate-y-2 group ${
                 plan.highlighted
-                  ? "ring-4 ring-green-500 transform md:-translate-y-2"
-                  : "border border-green-100"
+                  ? "ring-1 ring-emerald-500 shadow-[0_20px_50px_-12px_rgba(16,185,129,0.15)] bg-gradient-to-b from-emerald-50/30 to-white"
+                  : "border border-slate-100 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)]"
               }`}
             >
-              {/* Card Header */}
-              <div className={`p-6 text-white ${
-                plan.highlighted 
-                  ? "bg-gradient-to-r from-green-500 to-emerald-600" 
-                  : "bg-gradient-to-r from-gray-700 to-gray-800"
-              }`}>
-                {plan.badge && (
-                  <div className="bg-white text-green-700 text-xs font-bold px-3 py-1 rounded-full inline-block mb-3">
-                    {plan.badge}
-                  </div>
-                )}
-                <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                <p className="text-white/90 text-sm">{plan.description}</p>
-              </div>
+              {plan.badge && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-emerald-600 text-white text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-emerald-200">
+                  {plan.badge}
+                </div>
+              )}
 
-              {/* Pricing */}
-              <div className="p-6">
-                <div className="mb-4">
+              <div className="p-8 pt-10">
+                <h3 className="text-xl font-bold text-slate-800 mb-2">{plan.name}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed mb-6 h-10 overflow-hidden">
+                  {plan.description}
+                </p>
+                
+                <div className="mb-8">
                   <div className="flex items-baseline">
-                    <span className="text-4xl font-bold text-green-600">
+                    <span className="text-4xl font-black text-slate-900 tracking-tight">
                       {plan.priceMonthly === 0 ? "Free" : `$${plan.priceMonthly}`}
                     </span>
-                    <span className="text-gray-500 ml-2">
-                      {plan.priceMonthly === 0 ? "" : "/month"}
+                    <span className="text-slate-400 text-sm font-medium ml-1">
+                      {plan.priceMonthly === 0 ? "" : "/mo"}
                     </span>
                   </div>
                   {plan.priceMonthly > 0 && (
-                    <div className="text-lg text-green-600 font-medium">
-                      ≈ UGX {plan.priceMonthlyUGX?.toLocaleString()}/month
+                    <div className="text-sm font-semibold text-emerald-600 mt-1">
+                      ≈ {plan.priceMonthlyUGX?.toLocaleString()} UGX
                     </div>
                   )}
                 </div>
 
-                {plan.setupFee && (
-                  <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm px-3 py-2 rounded-lg mb-4">
-                    One-time setup: <strong>${plan.setupFee}</strong> (≈ UGX {plan.setupFeeUGX?.toLocaleString()})
-                  </div>
-                )}
-
-                {plan.priceAnnually > 0 && (
-                  <div className="bg-green-50 border border-green-200 text-green-800 text-sm px-3 py-2 rounded-lg mb-4">
-                    Pay yearly: <strong>${plan.priceAnnually}</strong> (≈ UGX {plan.priceAnnuallyUGX?.toLocaleString()})
-                    <span className="block text-green-600 text-xs mt-1">Save 17%</span>
-                  </div>
-                )}
-
                 {/* Features */}
-                <ul className="space-y-3 mb-6">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-start text-sm text-gray-600">
-                      <svg
-                        className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
+                <div className="flex-grow">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Includes:</p>
+                  <ul className="space-y-4 mb-8">
+                    {plan.features.map((feature, index) => (
+                      <li key={index} className="flex items-start text-sm text-slate-600 group/item">
+                        <div className="mr-3 mt-1 w-4 h-4 rounded-full bg-emerald-50 flex items-center justify-center flex-shrink-0 group-hover/item:bg-emerald-100 transition-colors">
+                          <svg className="w-2.5 h-2.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                        <span className="leading-snug">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
                 {/* CTA Button */}
                 <Link
                   href={`/register?plan=${plan.slug}`}
-                  className={`block w-full text-center py-3 rounded-xl font-semibold transition-all ${
+                  className={`block w-full text-center py-4 rounded-2xl font-bold text-sm transition-all active:scale-95 ${
                     plan.highlighted
-                      ? "bg-green-600 text-white hover:bg-green-700 hover:shadow-lg"
-                      : "bg-green-50 text-green-700 hover:bg-green-100 border border-green-200"
+                      ? "bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg shadow-emerald-100 hover:shadow-emerald-200"
+                      : "bg-slate-50 text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-100 hover:border-emerald-100"
                   }`}
                 >
-                  {plan.priceMonthly === 0 ? "Start Free" : "Start Free Trial"}
+                  {plan.priceMonthly === 0 ? "Get Started" : "Choose Plan"}
                 </Link>
+                
+                {plan.setupFee && (
+                  <p className="mt-4 text-[10px] text-center text-slate-400 font-medium">
+                    + One-time setup fee: ${plan.setupFee}
+                  </p>
+                )}
               </div>
             </div>
           ))}
         </div>
 
-        {/* Payment Methods Banner */}
-        <div className="mt-12 bg-gradient-to-r from-green-600 via-emerald-500 to-teal-600 rounded-3xl p-8 text-white shadow-xl">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold mb-2">
-              💰 Easy Payments for Ugandans
-            </h2>
-            <p className="text-green-100">
-              We know crypto can be confusing. We make it simple!
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6 text-center">
-            <div className="bg-white/10 backdrop-blur rounded-xl p-4">
-              <div className="text-3xl mb-2">₿</div>
-              <h3 className="font-bold mb-1">Bitcoin & Crypto</h3>
-              <p className="text-green-100 text-sm">Pay with Bitcoin, Ethereum, USDT and 150+ cryptocurrencies</p>
+        {/* Niche Stats/Trust section */}
+        <div className="mt-32 grid md:grid-cols-4 gap-8 border-y border-slate-100 py-12">
+          {[
+            { label: "Active Units", value: "2,500+" },
+            { label: "Mbarara Landlords", value: "120+" },
+            { label: "Payments Processed", value: "UGX 4.2B" },
+            { label: "Support Rating", value: "4.9/5" },
+          ].map((stat, i) => (
+            <div key={i} className="text-center">
+              <div className="text-3xl font-black text-slate-900 mb-1">{stat.value}</div>
+              <div className="text-xs font-bold text-emerald-600 uppercase tracking-widest">{stat.label}</div>
             </div>
-            <div className="bg-white/10 backdrop-blur rounded-xl p-4">
-              <div className="text-3xl mb-2">📱</div>
-              <h3 className="font-bold mb-1">Mobile Money</h3>
-              <p className="text-green-100 text-sm">Convert crypto to MTN/Airtel Mobile Money instantly</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur rounded-xl p-4">
-              <div className="text-3xl mb-2">🏦</div>
-              <h3 className="font-bold mb-1">Bank Transfer</h3>
-              <p className="text-green-100 text-sm">Direct bank deposits in UGX/USD to our Stanbic or DFCC account</p>
-            </div>
-          </div>
-          <div className="mt-6 text-center text-green-100 text-sm">
-            Questions? Call/WhatsApp: <span className="font-bold text-white">+256 700 123 456</span>
-          </div>
+          ))}
         </div>
 
-        {/* FAQ Section */}
-        <div className="mt-16 bg-white rounded-2xl shadow-lg p-8 border border-green-100">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
-            Frequently Asked <span className="text-green-600">Questions</span>
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="space-y-6">
+        {/* Payment Methods - Cleaned up */}
+        <div className="mt-32 relative group">
+          <div className="absolute inset-0 bg-emerald-600 rounded-[3rem] -rotate-1 group-hover:rotate-0 transition-transform duration-500"></div>
+          <div className="relative bg-slate-900 text-white rounded-[3rem] p-12 md:p-16 overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+            
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center">
-                  <span className="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm mr-2">?</span>
-                  What payment methods do you accept?
-                </h3>
-                <p className="text-gray-600 ml-8">
-                  We accept Bitcoin, Ethereum, USDT and 150+ cryptocurrencies through NOWPayments. 
-                  We also accept direct bank transfers to Stanbic Bank or DFCC Bank accounts in UGX or USD.
+                <h2 className="text-3xl md:text-4xl font-bold mb-6">Local & Global <span className="text-emerald-400">Payment Methods</span></h2>
+                <p className="text-slate-400 text-lg mb-8 leading-relaxed">
+                  We bridge the gap between digital currency and local banking. Pay with ease using the methods that work best for you in Uganda.
                 </p>
+                <div className="flex flex-wrap gap-4">
+                  {["Bitcoin", "USDT", "Mobile Money", "Bank Transfer"].map((tag) => (
+                    <span key={tag} className="bg-white/5 border border-white/10 px-4 py-2 rounded-full text-xs font-bold">{tag}</span>
+                  ))}
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center">
-                  <span className="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm mr-2">?</span>
-                  Can I change my plan later?
-                </h3>
-                <p className="text-gray-600 ml-8">
-                  Absolutely! Upgrade or downgrade anytime. When you upgrade, you get immediate access 
-                  to new features. Downgrades take effect at your next billing cycle.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center">
-                  <span className="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm mr-2">?</span>
-                  Do I need a credit card to start?
-                </h3>
-                <p className="text-gray-600 ml-8">
-                  No! Our Free plan requires no payment details. For paid plans, you can pay with 
-                  crypto or bank transfer - no credit card needed.
-                </p>
-              </div>
-            </div>
-            <div className="space-y-6">
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center">
-                  <span className="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm mr-2">?</span>
-                  What happens when my trial ends?
-                </h3>
-                <p className="text-gray-600 ml-8">
-                  You&apos;ll receive friendly reminders before your trial ends. You can then subscribe 
-                  using your preferred payment method to continue using all features.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center">
-                  <span className="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm mr-2">?</span>
-                  Is there a refund policy?
-                </h3>
-                <p className="text-gray-600 ml-8">
-                  Yes! We offer a 30-day money-back guarantee for all paid plans. Contact our 
-                  support team on WhatsApp for quick assistance.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2 flex items-center">
-                  <span className="w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm mr-2">?</span>
-                  Do you offer training?
-                </h3>
-                <p className="text-gray-600 ml-8">
-                  Yes! All paid plans include free training via WhatsApp or phone. Estate Manager 
-                  plans include on-site training in Mbarara or Kampala.
-                </p>
+              <div className="grid sm:grid-cols-2 gap-6">
+                <div className="p-6 bg-white/5 border border-white/10 rounded-3xl hover:bg-white/10 transition-colors">
+                  <div className="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center mb-4">
+                    <span className="text-emerald-400 text-xl font-bold">₿</span>
+                  </div>
+                  <h3 className="font-bold mb-2">NOWPayments</h3>
+                  <p className="text-slate-400 text-sm">Automated crypto payments via the industry leader.</p>
+                </div>
+                <div className="p-6 bg-white/5 border border-white/10 rounded-3xl hover:bg-white/10 transition-colors">
+                  <div className="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center mb-4">
+                    <span className="text-emerald-400 text-xl font-bold">📲</span>
+                  </div>
+                  <h3 className="font-bold mb-2">MoMo Bridge</h3>
+                  <p className="text-slate-400 text-sm">Convert your crypto to MTN/Airtel cashout instantly.</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Contact CTA */}
-        <div className="mt-12 text-center">
-          <p className="text-gray-600 mb-4">Still have questions? We&apos;d love to help!</p>
-          <div className="flex justify-center gap-4">
-            <a 
-              href="tel:+256700123456" 
-              className="bg-green-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors"
-            >
-              📞 Call Us
-            </a>
-            <a 
-              href="https://wa.me/256700123456" 
-              className="bg-emerald-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-emerald-700 transition-colors"
-            >
-              💬 WhatsApp
-            </a>
-          </div>
+        {/* Final CTA */}
+        <div className="mt-32 text-center">
+          <h2 className="text-3xl font-black text-slate-900 mb-6">Ready to simplify your rent flow?</h2>
+          <Link 
+            href="/register" 
+            className="inline-flex items-center space-x-3 bg-emerald-600 text-white px-8 py-4 rounded-full font-bold hover:bg-emerald-700 transition-all hover:shadow-2xl hover:shadow-emerald-200 active:scale-95"
+          >
+            <span>Create Your Free Account</span>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
+          <p className="mt-6 text-slate-400 text-sm font-medium">Join 500+ landlords managing 2,500+ units today.</p>
         </div>
       </section>
     </div>
