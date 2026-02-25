@@ -61,11 +61,14 @@ const db = {
             
             // Simple check for eq() in condition - this is a rough approximation
             if (condition && typeof condition === 'object') {
-              const cond = condition as { left?: { column?: { name?: string } }; right?: unknown };
+              const cond = condition as { left?: { column?: { name?: string; table?: { name?: string } } }; right?: unknown };
               if (cond?.left?.column?.name === 'email' && cond.right) {
                 emailFilter = String(cond.right);
               }
-              if (cond?.left?.column?.name === 'id' && cond.right && tableName === 'sessions') {
+              // Check for id column flexibly
+              const leftCol = cond?.left?.column;
+              const colName = leftCol?.name || leftCol?.table?.name;
+              if (colName === 'id' && cond.right && tableName === 'sessions') {
                 sessionIdFilter = String(cond.right);
               }
             }
@@ -112,8 +115,11 @@ const db = {
               where: (condition: unknown): MockResult => {
                 let sessionId: string | null = null;
                 if (condition && typeof condition === 'object') {
-                  const cond = condition as { left?: { column?: { name?: string } }; right?: unknown };
-                  if (cond?.left?.column?.name === 'id' && cond.right) {
+                  const cond = condition as { left?: { column?: { name?: string; table?: { name?: string } } }; right?: unknown };
+                  // Check if this is a session ID lookup - be flexible about the column path
+                  const leftCol = cond?.left?.column;
+                  const colName = leftCol?.name || leftCol?.table?.name;
+                  if (colName === 'id' && cond.right) {
                     sessionId = String(cond.right);
                   }
                 }
