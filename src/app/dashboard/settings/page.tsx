@@ -27,6 +27,7 @@ interface MockProfile {
   userId: number;
   verificationStatus: "pending" | "under_review" | "approved" | "rejected";
   phone: string | null;
+  verificationNotes?: string | null;
 }
 
 export default function SettingsPage() { // Directly export the client component
