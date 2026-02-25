@@ -1,23 +1,26 @@
 import { NextResponse } from 'next/server';
+import { getSession } from "@/lib/auth";
 
 export async function GET() {
-  console.log("GET /api/auth/session called");
-  // In a real app, this would fetch the session from cookies/DB.
-  // For now, we return mock session data.
-  const mockSession = {
+  const session = await getSession();
+  
+  if (!session) {
+    return NextResponse.json({ user: null }, { status: 401 });
+  }
+
+  // Return the actual session data from the database
+  return NextResponse.json({
     user: {
-      id: 1,
-      name: "Demo User",
-      email: "user@demo.com",
-      role: "landlord",
-      avatarUrl: null,
+      id: session.user.id,
+      name: session.user.name,
+      email: session.user.email.toLowerCase(),
+      role: session.user.role,
+      avatarUrl: session.user.avatarUrl,
     },
     session: {
-      id: "mock-session-id",
-      userId: 1,
-      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Expires in 30 days
-      createdAt: new Date(),
-    },
-  };
-  return NextResponse.json(mockSession);
+      id: session.session.id,
+      userId: session.session.userId,
+      expiresAt: session.session.expiresAt,
+    }
+  });
 }

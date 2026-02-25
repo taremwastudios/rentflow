@@ -94,8 +94,8 @@ export default function VerifyPage() {
     );
   }
 
-  // 2. Pending / Under Review State - Persistent "Waiting"
-  if (status?.verificationStatus === "pending" || status?.verificationStatus === "under_review") {
+  // 2. Under Review State - Persistent "Waiting" (Show after form submission)
+  if (status?.verificationStatus === "under_review") {
     return (
       <div className="max-w-2xl mx-auto py-16 px-4">
         <div className="bg-white dark:bg-slate-950 rounded-xl border border-slate-100 dark:border-emerald-500/20 p-10 text-center transition-colors shadow-sm dark:shadow-none">
@@ -105,7 +105,7 @@ export default function VerifyPage() {
             We have received your documents. Our team is currently verifying your details to ensure platform security. This typically takes 24-48 hours.
           </p>
           <div className="inline-block bg-slate-100 dark:bg-slate-900 text-slate-500 dark:text-slate-400 px-5 py-2 rounded-lg font-black text-[10px] uppercase tracking-widest border dark:border-emerald-500/10">
-            Status: {status.verificationStatus.replace("_", " ")}
+            Status: Under Review
           </div>
           <div className="mt-10">
              <Link
@@ -120,7 +120,7 @@ export default function VerifyPage() {
     );
   }
 
-  // 3. Rejected or New State - Show Form
+  // 3. Rejected or Pending State - Show Form
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="px-2 transition-colors">

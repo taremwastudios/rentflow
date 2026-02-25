@@ -10,20 +10,30 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const [profile] = await db
+  // 1. Fetch or create landlord profile
+  let [profile] = await db
     .select()
     .from(landlordProfiles)
     .where(eq(landlordProfiles.userId, session.user.id))
     .limit(1);
 
-  // Also fetch the latest user info (for phone number)
+  if (!profile) {
+    // If no profile exists yet (e.g. for a seeded user), create one
+    const [newProfile] = await db.insert(landlordProfiles).values({
+      userId: session.user.id,
+      location: "Mbarara, Uganda",
+      verificationStatus: "pending",
+    }).returning();
+    profile = newProfile;
+  }
+
+  // 2. Fetch user details (for real phone number)
   const [user] = await db
     .select({ phone: users.phone })
     .from(users)
     .where(eq(users.id, session.user.id))
     .limit(1);
 
-  // Return combined profile and user data
   return NextResponse.json({
     ...profile,
     phone: user?.phone || "",
