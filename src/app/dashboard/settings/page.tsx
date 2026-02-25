@@ -27,10 +27,9 @@ interface MockProfile {
   userId: number;
   verificationStatus: "pending" | "under_review" | "approved" | "rejected";
   phone: string | null;
-  verificationNotes?: string | null;
 }
 
-export default function SettingsPage() { // Directly export the client component
+export default function SettingsPage() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [profile, setProfile] = useState<MockProfile | null>(null);
   const [session, setSession] = useState<MockSession | null>(null);
@@ -38,224 +37,175 @@ export default function SettingsPage() { // Directly export the client component
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const root = window.document.documentElement;
+    // Initialize theme from localStorage or system preference
     const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) as 'light' | 'dark' | null;
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    
     const initialTheme = storedTheme || systemTheme || 'light';
     setTheme(initialTheme);
-    root.classList.toggle('dark', initialTheme === 'dark');
 
     const fetchData = async () => {
       setLoading(true);
       setError(null);
       try {
-        console.log("Fetching session data...");
         const sessionResponse = await fetch('/api/auth/session');
-        if (!sessionResponse.ok) {
-          throw new Error(`HTTP error! status: ${sessionResponse.status}`);
-        }
+        if (!sessionResponse.ok) throw new Error(`Session error: ${sessionResponse.status}`);
         const fetchedSession: MockSession = await sessionResponse.json();
         
         if (!fetchedSession.user) {
-          console.warn("No user found in session, redirecting to login.");
           window.location.href = "/login";
           return;
         }
         setSession(fetchedSession);
-        console.log("Session fetched successfully.");
 
-        console.log("Fetching profile data...");
         const profileResponse = await fetch('/api/profile');
-        if (!profileResponse.ok) {
-          throw new Error(`HTTP error! status: ${profileResponse.status}`);
-        }
+        if (!profileResponse.ok) throw new Error(`Profile error: ${profileResponse.status}`);
         const fetchedProfile: MockProfile = await profileResponse.json();
         setProfile(fetchedProfile);
-        console.log("Profile fetched successfully.");
 
       } catch (fetchError: any) {
-        console.error("Error fetching settings data:", fetchError.message || fetchError);
-        setError("Failed to load settings. Please check your connection or try again later.");
+        console.error("Error fetching settings data:", fetchError);
+        setError("Failed to load settings. Please refresh or try again.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, []);
 
   const toggleTheme = useCallback((newTheme: "light" | "dark") => {
     setTheme(newTheme);
-    const root = window.document.documentElement;
-    root.classList.toggle('dark', newTheme === 'dark');
     localStorage.setItem(THEME_STORAGE_KEY, newTheme);
+    
+    // Apply class to documentElement for global support
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   }, []);
 
-  // Placeholder for profile update logic. In a real app, this would call an API route.
   const handleUpdateProfile = async (formData: FormData) => {
-    console.log("Simulating profile update from client...");
-    // This would typically involve a fetch to an API route like /api/profile/update
-    alert("Profile updated (simulated)!");
-    // To reflect changes, you might refetch or update local state.
+    alert("Profile update simulated! (Live updates coming soon)");
   };
 
   if (loading) {
     return (
-      <div className="p-6 max-w-2xl mx-auto flex items-center justify-center h-64">
-        <div className="text-lg text-gray-600">Loading settings...</div>
+      <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
+        <div className="w-12 h-12 border-4 border-emerald-100 border-t-emerald-600 rounded-full animate-spin"></div>
+        <p className="text-slate-400 font-bold text-sm uppercase tracking-widest">Loading Settings</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="p-6 max-w-2xl mx-auto flex items-center justify-center h-64">
-        <div className="text-lg text-red-600">{error}</div>
+      <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
+        <div className="text-4xl">⚠️</div>
+        <p className="text-red-500 font-bold">{error}</p>
+        <button onClick={() => window.location.reload()} className="text-emerald-600 font-bold hover:underline">Try Again</button>
       </div>
     );
   }
 
-  if (!session || !session.user) {
-    // Redirect to login if session is invalid or not found
-    if (typeof window !== 'undefined') {
-       window.location.href = "/login";
-    }
-    return null; 
-  }
+  if (!session || !session.user) return null;
 
   return (
-    <div className="p-6 max-w-2xl mx-auto bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-700">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
-        <p className="text-gray-500 dark:text-gray-400 mt-1">Manage your account and profile</p>
+    <div className="max-w-4xl mx-auto space-y-10">
+      <div>
+        <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">Settings</h1>
+        <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">Manage your personal preferences and account security</p>
       </div>
 
-      {/* Theme Toggle Section */}
-      <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 mb-6 flex justify-between items-center">
-        <h2 className="font-semibold text-gray-900 dark:text-white">Appearance</h2>
-        <div className="flex items-center gap-4">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Theme</label>
-          <div className="flex gap-2 p-1 bg-gray-200 dark:bg-gray-700 rounded-full shadow-inner">
+      {/* Appearance Section */}
+      <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 p-8 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Appearance</h2>
+            <p className="text-slate-400 text-sm font-medium">Customize how RentFlow looks on your device</p>
+          </div>
+          
+          <div className="flex p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl w-fit">
             <button
               onClick={() => toggleTheme('light')}
-              className={`py-1.5 px-5 rounded-full text-xs font-bold transition-all ${
+              className={`flex items-center space-x-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${
                 theme === 'light' 
-                  ? 'bg-white text-gray-900 shadow dark:bg-gray-300 dark:text-gray-900' 
-                  : 'text-gray-500 dark:text-gray-300'
+                  ? 'bg-white text-slate-900 shadow-lg' 
+                  : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
               }`}
             >
-              Light
+              <span>☀️</span>
+              <span>Light</span>
             </button>
             <button
               onClick={() => toggleTheme('dark')}
-              className={`py-1.5 px-5 rounded-full text-xs font-bold transition-all ${
+              className={`flex items-center space-x-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${
                 theme === 'dark' 
-                  ? 'bg-gray-800 text-white shadow dark:bg-gray-200 dark:text-gray-900' 
-                  : 'text-gray-500 dark:text-gray-300'
+                  ? 'bg-slate-700 text-white shadow-lg' 
+                  : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
               }`}
             >
-              Dark
+              <span>🌙</span>
+              <span>Dark</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Profile */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 mb-6">
-        <h2 className="font-semibold text-gray-900 dark:text-white mb-5">Profile Information</h2>
-        {/* Using a placeholder for form submission. In a real app, this would call an API route. */}
-        <form onSubmit={(e) => { e.preventDefault(); handleUpdateProfile(new FormData(e.currentTarget)); }} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Full Name</label>
+      {/* Profile Information */}
+      <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 p-8 shadow-sm">
+        <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-8">Profile Information</h2>
+        <form onSubmit={(e) => { e.preventDefault(); handleUpdateProfile(new FormData(e.currentTarget)); }} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
             <input
               name="name"
               type="text"
               defaultValue={session.user.name}
               required
-              className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl text-slate-900 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Email Address</label>
+          
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email (Primary)</label>
             <input
               type="email"
               value={session.user.email}
               disabled
-              className="w-full px-4 py-3 border border-gray-100 dark:border-gray-700 rounded-xl text-gray-400 dark:bg-gray-800 cursor-not-allowed"
+              className="w-full px-6 py-4 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-400 font-bold cursor-not-allowed"
             />
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Email cannot be changed</p>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Phone Number</label>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Phone Number</label>
             <input
               name="phone"
               type="tel"
               placeholder="+256 700 000 000"
               defaultValue={profile?.phone || ""}
-              className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white dark:bg-gray-700 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl text-slate-900 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
             />
           </div>
-          <button
-            type="submit"
-            className="bg-emerald-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-emerald-700 transition-colors"
-          >
-            Save Changes
-          </button>
+
+          <div className="md:col-span-2 pt-4">
+            <button
+              type="submit"
+              className="px-10 py-4 bg-emerald-600 text-white rounded-2xl font-bold shadow-xl shadow-emerald-200 hover:bg-emerald-700 transition-all active:scale-95"
+            >
+              Update Profile
+            </button>
+          </div>
         </form>
       </div>
 
-      {/* Verification Status */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 mb-6">
-        <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Verification Status</h2>
-        <div className={`p-4 rounded-xl ${
-          profile?.verificationStatus === "approved"
-            ? "bg-green-50 border border-green-200 dark:bg-green-900 dark:border-green-700"
-            : profile?.verificationStatus === "under_review"
-            ? "bg-blue-50 border border-blue-200 dark:bg-blue-900 dark:border-blue-700"
-            : profile?.verificationStatus === "rejected"
-            ? "bg-red-50 border border-red-200 dark:bg-red-900 dark:border-red-700"
-            : "bg-amber-50 border border-amber-200 dark:bg-amber-900 dark:border-amber-700"
-        }`}>
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">
-              {profile?.verificationStatus === "approved" ? "✅" :
-               profile?.verificationStatus === "under_review" ? "🔍" :
-               profile?.verificationStatus === "rejected" ? "❌" : "⏳"}
-            </span>
-            <div>
-              <p className="font-medium text-gray-900 dark:text-white capitalize">
-                {profile?.verificationStatus?.replace("_", " ") ?? "Pending"}
-              </p>
-              {profile?.verificationStatus === "rejected" && profile.verificationNotes && (
-                <p className="text-sm text-red-600 dark:text-red-400 mt-1">{profile.verificationNotes}</p>
-              )}
-            </div>
-          </div>
-        </div>
-        {(profile?.verificationStatus === "pending" || profile?.verificationStatus === "rejected") && (
-          <Link
-            href="/dashboard/verify"
-            className="mt-3 inline-block text-emerald-600 dark:text-emerald-400 text-sm font-medium hover:underline"
-          >
-            Upload / Re-upload Documents →
-          </Link>
-        )}
-      </div>
-
-      {/* Account Info */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6">
-        <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Account</h2>
-        <div className="space-y-3 text-sm">
-          <div className="flex justify-between">
-            <span className="text-gray-500 dark:text-gray-400">Role</span>
-            <span className="font-medium text-gray-900 dark:text-white capitalize">{session.user.role}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-500 dark:text-gray-400">Email</span>
-            <span className="font-medium text-gray-900 dark:text-white">{session.user.email}</span>
-          </div>
-        </div>
+      {/* Danger Zone */}
+      <div className="bg-red-50/50 dark:bg-red-950/10 rounded-[2.5rem] border border-red-100 dark:border-red-900/30 p-8">
+        <h2 className="text-xl font-bold text-red-600 dark:text-red-400 mb-2">Danger Zone</h2>
+        <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-6">Permanently delete your account and all associated data</p>
+        <button className="px-8 py-3 border-2 border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-xl font-bold text-sm hover:bg-red-600 hover:text-white transition-all">
+          Delete Account
+        </button>
       </div>
     </div>
   );
