@@ -57,44 +57,49 @@ export default async function DashboardPage() {
   const isUnderReview = data.profile?.verificationStatus === "under_review";
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <div className="w-full space-y-10 transition-all">
       {/* Header */}
       <div className="px-1">
         <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight transition-colors">
           Good day, {session.user.name.split(" ")[0]}! 👋
         </h1>
-        <p className="text-slate-500 dark:text-emerald-500/60 mt-1 font-medium text-sm transition-colors">Here&apos;s your property overview.</p>
+        <p className="text-slate-500 dark:text-emerald-500/60 mt-1 font-medium text-sm transition-colors text-slate-400">Here&apos;s your property overview.</p>
       </div>
 
       {/* Verification Banner */}
       {!isVerified && (
-        <div className={`rounded-xl p-5 border transition-colors ${
+        <div className={`rounded-xl p-6 border transition-colors ${
           isPending
             ? "bg-amber-50 border-amber-200 dark:bg-amber-500/5 dark:border-amber-500/20"
             : isUnderReview
             ? "bg-blue-50 border-blue-200 dark:bg-blue-500/5 dark:border-blue-500/20"
             : "bg-red-50 border-red-200 dark:bg-red-500/5 dark:border-red-500/20"
         }`}>
-          <div className="flex items-start gap-4">
+          <div className="flex items-start gap-5">
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl transition-colors ${
+              isPending ? "bg-amber-100 dark:bg-amber-500/10" : isUnderReview ? "bg-blue-100 dark:bg-blue-500/10" : "bg-red-100 dark:bg-red-500/10"
+            }`}>
+              {isPending ? "📋" : isUnderReview ? "⏳" : "❌"}
+            </div>
             <div className="flex-1">
-              <h3 className={`font-bold text-sm transition-colors ${
+              <h3 className={`font-bold text-md transition-colors ${
                 isPending ? "text-amber-800 dark:text-amber-400" : isUnderReview ? "text-blue-800 dark:text-blue-400" : "text-red-800 dark:text-red-400"
               }`}>
                 {isPending ? "Verification Required" : isUnderReview ? "Review in Progress" : "Verification Rejected"}
               </h3>
-              <p className={`text-xs mt-1 font-medium transition-colors ${
-                isPending ? "text-amber-700 dark:text-amber-500/70" : isUnderReview ? "text-blue-700 dark:text-blue-500/70" : "text-red-700 dark:text-red-500/70"
+              <p className={`text-sm mt-1 font-medium transition-colors ${
+                isPending ? "text-amber-700 dark:text-amber-500/70" : isUnderReview ? "text-blue-700 dark:text-blue-500/70" : "text-red-700 dark:text-red-700"
               }`}>
                 {isPending
                   ? "Please upload documents to start listing properties."
                   : isUnderReview
-                  ? "We are currently reviewing your documents."
-                  : `Your verification was rejected. ${data.profile?.verificationNotes ?? "Please re-upload."}`}
+                  ? "Our team is currently reviewing your documents. This process typically takes 24-48 hours."
+                  : `Your verification was rejected. ${data.profile?.verificationNotes ?? "Please re-upload your documents."}`}
               </p>
               {(isPending || data.profile?.verificationStatus === "rejected") && (
                 <Link
                   href="/dashboard/verify"
-                  className="inline-block mt-3 bg-amber-600 text-white px-5 py-2 rounded-lg text-xs font-bold transition-all active:scale-95 shadow-md"
+                  className="inline-block mt-4 bg-amber-600 text-white px-6 py-2.5 rounded-lg text-xs font-bold transition-all active:scale-95 shadow-md"
                 >
                   Verify Now →
                 </Link>
@@ -138,7 +143,7 @@ export default async function DashboardPage() {
           ) : (
             <div className="space-y-4">
               {data.recentPayments.map((payment: any) => (
-                <div key={payment.id} className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-emerald-500/5 transition-colors">
+                <div key={payment.id} className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-emerald-500/5 transition-colors border dark:border-emerald-500/10">
                   <div>
                     <p className="text-sm font-bold text-slate-900 dark:text-white transition-colors">{payment.periodMonth}/{payment.periodYear}</p>
                   </div>
@@ -167,7 +172,7 @@ export default async function DashboardPage() {
                 className={`flex items-center gap-4 p-4 rounded-xl border border-transparent transition-all active:scale-95 ${action.color}`}
               >
                 <span className="text-2xl">{action.icon}</span>
-                <span className="text-xs font-black uppercase tracking-widest transition-colors">{action.label}</span>
+                <span className="text-xs font-black uppercase tracking-widest">{action.label}</span>
               </Link>
             ))}
           </div>

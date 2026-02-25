@@ -68,12 +68,12 @@ export default function VerifyPage() {
   // 1. Approved State
   if (status?.verificationStatus === "approved") {
     return (
-      <div className="max-w-4xl mx-auto py-16 px-4">
-        <div className="bg-white dark:bg-slate-950 rounded-xl border border-emerald-100 dark:border-emerald-500/20 p-12 text-center transition-colors shadow-sm dark:shadow-none">
+      <div className="w-full py-16 px-4">
+        <div className="bg-white dark:bg-slate-950 rounded-xl border border-emerald-100 dark:border-emerald-500/20 p-12 text-center transition-colors shadow-sm dark:shadow-none max-w-4xl mx-auto">
           <div className="text-5xl mb-8 transition-colors">✅</div>
           <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-4 transition-colors uppercase tracking-tight">Account Verified</h2>
           <p className="text-slate-500 dark:text-emerald-500/60 mb-10 font-medium text-sm transition-colors leading-relaxed max-w-lg mx-auto">
-            Congratulations! Your account is verified. You now have full access to RentFlow Uganda. Start listing properties and managing your units effortlessly.
+            Congratulations! Your landlord account is verified. You now have full access to RentFlow Uganda. Start listing properties and managing your units effortlessly.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-sm mx-auto">
              <Link
@@ -94,11 +94,11 @@ export default function VerifyPage() {
     );
   }
 
-  // 2. Under Review State
+  // 2. Under Review State - SHOW MAGNIFYING GLASS 🔍
   if (status?.verificationStatus === "under_review") {
     return (
-      <div className="max-w-4xl mx-auto py-16 px-4">
-        <div className="bg-white dark:bg-slate-950 rounded-xl border border-slate-100 dark:border-emerald-500/20 p-12 text-center transition-colors shadow-sm dark:shadow-none">
+      <div className="w-full py-16 px-4">
+        <div className="bg-white dark:bg-slate-950 rounded-xl border border-slate-100 dark:border-emerald-500/20 p-12 text-center transition-colors shadow-sm dark:shadow-none max-w-4xl mx-auto">
           <div className="text-5xl mb-8 transition-colors">🔍</div>
           <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-4 transition-colors uppercase tracking-tight">Review in Progress</h2>
           <p className="text-slate-500 dark:text-emerald-500/60 mb-10 font-medium text-sm transition-colors leading-relaxed max-w-lg mx-auto">
@@ -122,9 +122,9 @@ export default function VerifyPage() {
 
   // 3. Rejected or Pending State
   return (
-    <div className="max-w-7xl mx-auto space-y-10">
+    <div className="w-full space-y-10">
       <div className="px-2 transition-colors">
-        <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">Account Verification</h1>
+        <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight transition-colors">Account Verification</h1>
         <p className="text-slate-500 dark:text-emerald-500/60 mt-2 font-medium text-sm">
           Please upload your documents to verify your landlord identity.
         </p>
@@ -176,27 +176,27 @@ export default function VerifyPage() {
         </div>
 
         <div className="bg-white dark:bg-slate-950 rounded-xl border border-slate-100 dark:border-emerald-500/20 p-8 transition-colors shadow-sm dark:shadow-none">
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-8 transition-colors">Business Details</h2>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-8 transition-colors">Business Information</h2>
           <div className="grid gap-8">
              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 transition-colors">
                 <div className="space-y-2 transition-colors">
                   <label className="text-[10px] font-black text-slate-400 dark:text-emerald-500 uppercase tracking-widest ml-1 transition-colors">Trading Name</label>
-                  <input name="businessName" type="text" placeholder="e.g. Mugisha Properties" className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-emerald-500/20 rounded-xl text-slate-900 dark:text-white text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 dark:placeholder:text-emerald-900" />
+                  <input name="businessName" type="text" placeholder="e.g. Mugisha Properties" className="w-full px-6 py-4 bg-slate-50 dark:bg-transparent border border-slate-100 dark:border-emerald-500/20 rounded-xl text-slate-900 dark:text-white text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 dark:placeholder:text-emerald-900" />
                 </div>
                 <div className="space-y-2 transition-colors">
                   <label className="text-[10px] font-black text-slate-400 dark:text-emerald-500 uppercase tracking-widest ml-1 transition-colors">Location</label>
-                  <input name="location" type="text" defaultValue="Mbarara, Uganda" className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-emerald-500/20 rounded-xl text-slate-900 dark:text-white text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 dark:placeholder:text-emerald-900" />
+                  <input name="location" type="text" defaultValue="Mbarara, Uganda" className="w-full px-6 py-4 bg-slate-50 dark:bg-transparent border border-slate-100 dark:border-emerald-500/20 rounded-xl text-slate-900 dark:text-white text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 dark:placeholder:text-emerald-900" />
                 </div>
              </div>
              <div className="space-y-2 transition-colors">
                 <label className="text-[10px] font-black text-slate-400 dark:text-emerald-500 uppercase tracking-widest ml-1 transition-colors">Bio / Summary</label>
-                <textarea name="bio" rows={4} placeholder="Tell us about your property business..." className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-emerald-500/20 rounded-xl text-slate-900 dark:text-white text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 dark:placeholder:text-emerald-900 resize-none" />
+                <textarea name="bio" rows={4} placeholder="Brief description of your property management business..." className="w-full px-6 py-4 bg-slate-50 dark:bg-transparent border border-slate-100 dark:border-emerald-500/20 rounded-xl text-slate-900 dark:text-white text-sm font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 dark:placeholder:text-emerald-900 resize-none" />
              </div>
           </div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 pt-4 transition-colors">
-          <Link href="/dashboard" className="flex-1 text-center py-4 border-2 border-slate-100 dark:border-emerald-500/20 rounded-2xl text-slate-600 dark:text-emerald-500/60 font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all active:scale-95">Save Later</Link>
+          <Link href="/dashboard" className="flex-1 text-center py-4 border-2 border-slate-100 dark:border-emerald-500/20 rounded-2xl text-slate-600 dark:text-emerald-500/60 font-black text-xs uppercase tracking-widest hover:bg-slate-50 dark:hover:bg-emerald-500/5 transition-all active:scale-95">Save Later</Link>
           <button 
             type="submit" 
             disabled={isSubmitting}
