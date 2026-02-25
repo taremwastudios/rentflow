@@ -122,7 +122,7 @@ export default function VerifyPage() {
 
   // 3. Rejected or Pending State
   return (
-    <div className="w-full space-y-10">
+    <div className="max-w-7xl mx-auto space-y-10">
       <div className="px-2 transition-colors">
         <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight transition-colors">Account Verification</h1>
         <p className="text-slate-500 dark:text-emerald-500/60 mt-2 font-medium text-sm">

@@ -57,7 +57,7 @@ export default async function DashboardPage() {
   const isUnderReview = data.profile?.verificationStatus === "under_review";
 
   return (
-    <div className="w-full space-y-10 transition-all">
+    <div className="max-w-7xl mx-auto space-y-10 transition-all">
       {/* Header */}
       <div className="px-1">
         <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight transition-colors">
