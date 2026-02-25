@@ -1,41 +1,41 @@
-import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
+import { pgSchema, text, integer, doublePrecision, timestamp, boolean, serial } from "drizzle-orm/pg-core";
+
+export const rentflowSchema = pgSchema("rentflow");
 
 // ─── Users (all roles) ───────────────────────────────────────────────────────
-export const users = sqliteTable("users", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const users = rentflowSchema.table("users", {
+  id: serial("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   phone: text("phone"),
   passwordHash: text("password_hash").notNull(),
-  role: text("role", { enum: ["admin", "landlord", "tenant"] }).notNull().default("tenant"),
+  role: text("role").notNull().default("tenant"), // Roles: admin, landlord, tenant
   avatarUrl: text("avatar_url"),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow(),
 });
 
 // ─── Landlord Profiles & Verification ────────────────────────────────────────
-export const landlordProfiles = sqliteTable("landlord_profiles", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const landlordProfiles = rentflowSchema.table("landlord_profiles", {
+  id: serial("id").primaryKey(),
   userId: integer("user_id").notNull().references(() => users.id),
   businessName: text("business_name"),
   bio: text("bio"),
   location: text("location").notNull().default("Mbarara, Uganda"),
-  verificationStatus: text("verification_status", {
-    enum: ["pending", "under_review", "approved", "rejected"],
-  }).notNull().default("pending"),
+  verificationStatus: text("verification_status").notNull().default("pending"), // pending, under_review, approved, rejected
   verificationNotes: text("verification_notes"),
   nationalIdUrl: text("national_id_url"),
   landTitleUrl: text("land_title_url"),
   registrationDocUrl: text("registration_doc_url"),
   additionalDocsUrl: text("additional_docs_url"),
   reviewedBy: integer("reviewed_by").references(() => users.id),
-  reviewedAt: integer("reviewed_at", { mode: "timestamp" }),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  reviewedAt: timestamp("reviewed_at", { mode: "date" }),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
 });
 
 // ─── Properties ───────────────────────────────────────────────────────────────
-export const properties = sqliteTable("properties", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const properties = rentflowSchema.table("properties", {
+  id: serial("id").primaryKey(),
   landlordId: integer("landlord_id").notNull().references(() => users.id),
   title: text("title").notNull(),
   description: text("description"),
@@ -43,60 +43,56 @@ export const properties = sqliteTable("properties", {
   city: text("city").notNull().default("Mbarara"),
   district: text("district").notNull().default("Mbarara"),
   country: text("country").notNull().default("Uganda"),
-  propertyType: text("property_type", {
-    enum: ["apartment", "house", "commercial", "studio", "hostel", "other"],
-  }).notNull().default("apartment"),
+  propertyType: text("property_type").notNull().default("apartment"), // apartment, house, commercial, studio, hostel, other
   totalUnits: integer("total_units").notNull().default(1),
   coverImageUrl: text("cover_image_url"),
-  isPublished: integer("is_published", { mode: "boolean" }).notNull().default(false),
+  isPublished: boolean("is_published").notNull().default(false),
   templateId: text("template_id").default("default"),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow(),
 });
 
 // ─── Property Images ──────────────────────────────────────────────────────────
-export const propertyImages = sqliteTable("property_images", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const propertyImages = rentflowSchema.table("property_images", {
+  id: serial("id").primaryKey(),
   propertyId: integer("property_id").notNull().references(() => properties.id),
   imageUrl: text("image_url").notNull(),
   caption: text("caption"),
   sortOrder: integer("sort_order").notNull().default(0),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
 });
 
 // ─── Units (individual rentable spaces within a property) ────────────────────
-export const units = sqliteTable("units", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const units = rentflowSchema.table("units", {
+  id: serial("id").primaryKey(),
   propertyId: integer("property_id").notNull().references(() => properties.id),
   unitNumber: text("unit_number").notNull(),
   floor: integer("floor"),
   bedrooms: integer("bedrooms").notNull().default(1),
   bathrooms: integer("bathrooms").notNull().default(1),
-  sizesqft: real("size_sqft"),
-  monthlyRent: real("monthly_rent").notNull(),
+  sizesqft: doublePrecision("size_sqft"),
+  monthlyRent: doublePrecision("monthly_rent").notNull(),
   currency: text("currency").notNull().default("UGX"),
-  status: text("status", {
-    enum: ["available", "occupied", "maintenance", "reserved"],
-  }).notNull().default("available"),
+  status: text("status").notNull().default("available"), // available, occupied, maintenance, reserved
   description: text("description"),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
 });
 
 // ─── Utilities ────────────────────────────────────────────────────────────────
-export const utilities = sqliteTable("utilities", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const utilities = rentflowSchema.table("utilities", {
+  id: serial("id").primaryKey(),
   propertyId: integer("property_id").notNull().references(() => properties.id),
   name: text("name").notNull(), // e.g. "Water", "Electricity", "Garbage"
-  chargeType: text("charge_type", { enum: ["fixed", "per_unit", "included"] }).notNull().default("fixed"),
-  amount: real("amount").notNull().default(0),
+  chargeType: text("charge_type").notNull().default("fixed"), // fixed, per_unit, included
+  amount: doublePrecision("amount").notNull().default(0),
   currency: text("currency").notNull().default("UGX"),
-  billingCycle: text("billing_cycle", { enum: ["monthly", "quarterly", "yearly"] }).notNull().default("monthly"),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  billingCycle: text("billing_cycle").notNull().default("monthly"), // monthly, quarterly, yearly
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
 });
 
 // ─── Tenants ──────────────────────────────────────────────────────────────────
-export const tenants = sqliteTable("tenants", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const tenants = rentflowSchema.table("tenants", {
+  id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id), // optional: tenant may not have account
   landlordId: integer("landlord_id").notNull().references(() => users.id),
   unitId: integer("unit_id").notNull().references(() => units.id),
@@ -106,161 +102,151 @@ export const tenants = sqliteTable("tenants", {
   phone: text("phone").notNull(),
   nationalId: text("national_id"),
   emergencyContact: text("emergency_contact"),
-  status: text("status", { enum: ["active", "former", "pending"] }).notNull().default("active"),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  status: text("status").notNull().default("active"), // active, former, pending
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
 });
 
 // ─── Tenancy Agreements ───────────────────────────────────────────────────────
-export const tenancyAgreements = sqliteTable("tenancy_agreements", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const tenancyAgreements = rentflowSchema.table("tenancy_agreements", {
+  id: serial("id").primaryKey(),
   tenantId: integer("tenant_id").notNull().references(() => tenants.id),
   unitId: integer("unit_id").notNull().references(() => units.id),
   landlordId: integer("landlord_id").notNull().references(() => users.id),
-  startDate: integer("start_date", { mode: "timestamp" }).notNull(),
-  endDate: integer("end_date", { mode: "timestamp" }),
-  monthlyRent: real("monthly_rent").notNull(),
-  depositAmount: real("deposit_amount").notNull().default(0),
+  startDate: timestamp("start_date", { mode: "date" }).notNull(),
+  endDate: timestamp("end_date", { mode: "date" }),
+  monthlyRent: doublePrecision("monthly_rent").notNull(),
+  depositAmount: doublePrecision("deposit_amount").notNull().default(0),
   currency: text("currency").notNull().default("UGX"),
   paymentDueDay: integer("payment_due_day").notNull().default(1), // day of month
   terms: text("terms"), // full agreement text
-  status: text("status", {
-    enum: ["draft", "active", "expired", "terminated"],
-  }).notNull().default("draft"),
-  signedByTenant: integer("signed_by_tenant", { mode: "boolean" }).notNull().default(false),
-  signedByLandlord: integer("signed_by_landlord", { mode: "boolean" }).notNull().default(false),
+  status: text("status").notNull().default("draft"), // draft, active, expired, terminated
+  signedByTenant: boolean("signed_by_tenant").notNull().default(false),
+  signedByLandlord: boolean("signed_by_landlord").notNull().default(false),
   documentUrl: text("document_url"),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
 });
 
 // ─── Rent Payments ────────────────────────────────────────────────────────────
-export const rentPayments = sqliteTable("rent_payments", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const rentPayments = rentflowSchema.table("rent_payments", {
+  id: serial("id").primaryKey(),
   tenantId: integer("tenant_id").notNull().references(() => tenants.id),
   unitId: integer("unit_id").notNull().references(() => units.id),
   landlordId: integer("landlord_id").notNull().references(() => users.id),
-  amount: real("amount").notNull(),
+  amount: doublePrecision("amount").notNull(),
   currency: text("currency").notNull().default("UGX"),
-  paymentDate: integer("payment_date", { mode: "timestamp" }),
-  dueDate: integer("due_date", { mode: "timestamp" }).notNull(),
+  paymentDate: timestamp("payment_date", { mode: "date" }),
+  dueDate: timestamp("due_date", { mode: "date" }).notNull(),
   periodMonth: integer("period_month").notNull(), // 1-12
   periodYear: integer("period_year").notNull(),
-  status: text("status", {
-    enum: ["pending", "paid", "overdue", "partial", "waived"],
-  }).notNull().default("pending"),
+  status: text("status").notNull().default("pending"), // pending, paid, overdue, partial, waived
   paymentMethod: text("payment_method"), // e.g. "Mobile Money", "Cash", "Bank Transfer"
   referenceNumber: text("reference_number"),
   notes: text("notes"),
-  lateFee: real("late_fee").notNull().default(0),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  lateFee: doublePrecision("late_fee").notNull().default(0),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
 });
 
 // ─── Utility Bills ────────────────────────────────────────────────────────────
-export const utilityBills = sqliteTable("utility_bills", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const utilityBills = rentflowSchema.table("utility_bills", {
+  id: serial("id").primaryKey(),
   tenantId: integer("tenant_id").notNull().references(() => tenants.id),
   utilityId: integer("utility_id").notNull().references(() => utilities.id),
-  amount: real("amount").notNull(),
+  amount: doublePrecision("amount").notNull(),
   currency: text("currency").notNull().default("UGX"),
-  dueDate: integer("due_date", { mode: "timestamp" }).notNull(),
-  paidDate: integer("paid_date", { mode: "timestamp" }),
-  status: text("status", { enum: ["pending", "paid", "overdue"] }).notNull().default("pending"),
+  dueDate: timestamp("due_date", { mode: "date" }).notNull(),
+  paidDate: timestamp("paid_date", { mode: "date" }),
+  status: text("status").notNull().default("pending"), // pending, paid, overdue
   periodMonth: integer("period_month").notNull(),
   periodYear: integer("period_year").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
 });
 
 // ─── Reminders / Notifications ────────────────────────────────────────────────
-export const reminders = sqliteTable("reminders", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const reminders = rentflowSchema.table("reminders", {
+  id: serial("id").primaryKey(),
   landlordId: integer("landlord_id").notNull().references(() => users.id),
   tenantId: integer("tenant_id").references(() => tenants.id),
-  type: text("type", {
-    enum: ["rent_due", "rent_overdue", "agreement_expiry", "utility_due", "custom"],
-  }).notNull(),
+  type: text("type").notNull(), // rent_due, rent_overdue, agreement_expiry, utility_due, custom
   title: text("title").notNull(),
   message: text("message").notNull(),
-  scheduledAt: integer("scheduled_at", { mode: "timestamp" }).notNull(),
-  sentAt: integer("sent_at", { mode: "timestamp" }),
-  status: text("status", { enum: ["pending", "sent", "failed"] }).notNull().default("pending"),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  scheduledAt: timestamp("scheduled_at", { mode: "date" }).notNull(),
+  sentAt: timestamp("sent_at", { mode: "date" }),
+  status: text("status").notNull().default("pending"), // pending, sent, failed
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
 });
 
 // ─── Property Inquiries (from public visitors) ────────────────────────────────
-export const inquiries = sqliteTable("inquiries", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const inquiries = rentflowSchema.table("inquiries", {
+  id: serial("id").primaryKey(),
   propertyId: integer("property_id").notNull().references(() => properties.id),
   landlordId: integer("landlord_id").notNull().references(() => users.id),
   visitorName: text("visitor_name").notNull(),
   visitorEmail: text("visitor_email"),
   visitorPhone: text("visitor_phone").notNull(),
   message: text("message").notNull(),
-  status: text("status", { enum: ["new", "read", "replied", "closed"] }).notNull().default("new"),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  status: text("status").notNull().default("new"), // new, read, replied, closed
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
 });
 
 // ─── Sessions (simple auth) ───────────────────────────────────────────────────
-export const sessions = sqliteTable("sessions", {
+export const sessions = rentflowSchema.table("sessions", {
   id: text("id").primaryKey(),
   userId: integer("user_id").notNull().references(() => users.id),
-  expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  expiresAt: timestamp("expires_at", { mode: "date" }).notNull(),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
 });
 
 // ─── Subscription Plans ──────────────────────────────────────────────────────
-export const subscriptionPlans = sqliteTable("subscription_plans", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const subscriptionPlans = rentflowSchema.table("subscription_plans", {
+  id: serial("id").primaryKey(),
   name: text("name").notNull(), // "Free", "Starter", "Businessman", "Pro", "Estate"
   slug: text("slug").notNull().unique(), // "free", "starter", "businessman", "pro", "estate"
   description: text("description"),
-  priceUsdMonthly: real("price_usd_monthly").notNull().default(0),
-  priceUsdAnnually: real("price_usd_annually"),
-  setupFeeUsd: real("setup_fee_usd").notNull().default(0),
+  priceUsdMonthly: doublePrecision("price_usd_monthly").notNull().default(0),
+  priceUsdAnnually: doublePrecision("price_usd_annually"),
+  setupFeeUsd: doublePrecision("setup_fee_usd").notNull().default(0),
   features: text("features").notNull(), // JSON array of features
   propertyLimit: integer("property_limit").notNull(), // -1 for unlimited
   unitLimit: integer("unit_limit").notNull(), // -1 for unlimited
-  storageGb: real("storage_gb").notNull().default(1),
-  prioritySupport: integer("priority_support", { mode: "boolean" }).notNull().default(false),
-  priorityMultiplier: real("priority_multiplier").notNull().default(1), // for featured listings
-  isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
+  storageGb: doublePrecision("storage_gb").notNull().default(1),
+  prioritySupport: boolean("priority_support").notNull().default(false),
+  priorityMultiplier: doublePrecision("priority_multiplier").notNull().default(1), // for featured listings
+  isActive: boolean("is_active").notNull().default(true),
   sortOrder: integer("sort_order").notNull().default(0),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
 });
 
 // ─── User Subscriptions ───────────────────────────────────────────────────────
-export const subscriptions = sqliteTable("subscriptions", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const subscriptions = rentflowSchema.table("subscriptions", {
+  id: serial("id").primaryKey(),
   userId: integer("user_id").notNull().references(() => users.id),
   planId: integer("plan_id").notNull().references(() => subscriptionPlans.id),
-  status: text("status", {
-    enum: ["active", "expired", "cancelled", "pending", "paused"],
-  }).notNull().default("pending"),
-  startedAt: integer("started_at", { mode: "timestamp" }),
-  expiresAt: integer("expires_at", { mode: "timestamp" }),
-  billingCycle: text("billing_cycle", { enum: ["monthly", "annually"] }).notNull().default("monthly"),
+  status: text("status").notNull().default("pending"), // active, expired, cancelled, pending, paused
+  startedAt: timestamp("started_at", { mode: "date" }),
+  expiresAt: timestamp("expires_at", { mode: "date" }),
+  billingCycle: text("billing_cycle").notNull().default("monthly"), // monthly, annually
   nowpaymentsPaymentId: text("nowpayments_payment_id"), // for tracking crypto payments
-  autoRenew: integer("auto_renew", { mode: "boolean" }).notNull().default(true),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  autoRenew: boolean("auto_renew").notNull().default(true),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow(),
 });
 
 // ─── Platform Payments (NOWPayments crypto) ───────────────────────────────────
-export const platformPayments = sqliteTable("platform_payments", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const platformPayments = rentflowSchema.table("platform_payments", {
+  id: serial("id").primaryKey(),
   userId: integer("user_id").notNull().references(() => users.id),
   subscriptionId: integer("subscription_id").references(() => subscriptions.id),
   planId: integer("plan_id").references(() => subscriptionPlans.id),
-  amountUsd: real("amount_usd").notNull(),
-  cryptoAmount: real("crypto_amount"),
+  amountUsd: doublePrecision("amount_usd").notNull(),
+  cryptoAmount: doublePrecision("crypto_amount"),
   currency: text("currency").notNull(), // crypto currency (BTC, ETH, USDT, etc.)
   nowpaymentsPaymentId: text("nowpayments_payment_id").notNull().unique(),
   nowpaymentsOrderId: text("nowpayments_order_id"),
-  paymentStatus: text("payment_status", {
-    enum: ["waiting", "confirming", "confirmed", "finished", "failed", "expired", "refunded"],
-  }).notNull().default("waiting"),
+  paymentStatus: text("payment_status").notNull().default("waiting"), // waiting, confirming, confirmed, finished, failed, expired, refunded
   payAddress: text("pay_address"), // crypto wallet address to pay to
   ipnData: text("ipn_data"), // JSON data from IPN webhook
   paymentUrl: text("payment_url"), // NOWPayments checkout URL
-  type: text("type", { enum: ["subscription", "setup_fee", "upgrade"] }).notNull().default("subscription"),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  type: text("type").notNull().default("subscription"), // subscription, setup_fee, upgrade
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow(),
 });
