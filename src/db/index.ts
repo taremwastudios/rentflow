@@ -42,6 +42,56 @@ function getTableName(table: unknown): string {
   return String(table);
 }
 
+// Helper to parse drizzle-orm condition object and extract filter values
+function parseCondition(condition: unknown, tableName: string): { email?: string; sessionId?: string; [key: string]: string | undefined } {
+  const result: { email?: string; sessionId?: string; [key: string]: string | undefined } = {};
+  
+  if (!condition || typeof condition !== 'object') return result;
+  
+  const cond = condition as { queryChunks?: Array<{ name?: string; value?: unknown; table?: unknown }> };
+  const chunks = cond.queryChunks || [];
+  
+  // Find column names and their corresponding values
+  for (let i = 0; i < chunks.length; i++) {
+    const chunk = chunks[i];
+    if (chunk.name) {
+      // Get the table info if available
+      const tableInfo = chunk.table as { name?: string } | undefined;
+      const columnTableName = tableInfo?.name;
+      
+      // Look at next chunk for the value
+      const nextChunk = chunks[i + 1];
+      if (nextChunk && nextChunk.value !== undefined) {
+        const value = Array.isArray(nextChunk.value) ? nextChunk.value[0] : nextChunk.value;
+        if (typeof value === 'string') {
+          // Map column names to result keys
+          if (chunk.name === 'email') {
+            result.email = value;
+          } else if (chunk.name === 'id' && columnTableName === 'sessions') {
+            result.sessionId = value;
+          } else if (chunk.name === 'id') {
+            result.id = value;
+          } else if (chunk.name === 'user_id') {
+            result.userId = value;
+          } else if (chunk.name === 'landlord_id') {
+            result.landlordId = value;
+          } else if (chunk.name === 'property_id') {
+            result.propertyId = value;
+          } else if (chunk.name === 'role') {
+            result.role = value;
+          } else if (chunk.name === 'verification_status') {
+            result.verificationStatus = value;
+          } else if (chunk.name === 'status') {
+            result.status = value;
+          }
+        }
+      }
+    }
+  }
+  
+  return result;
+}
+
 // The mock database object that mimics drizzle-orm's API
 const db = {
   // Handle db.select({ session: sessions, user: users }) or db.select() - can be called with an object of fields
@@ -55,23 +105,15 @@ const db = {
         return {
           // Handle .where() with eq() conditions
           where: (condition: unknown): MockResult => {
-            // Try to extract the email from the condition for user queries
-            let emailFilter: string | null = null;
-            let sessionIdFilter: string | null = null;
+            // Parse condition to extract filter values
+            const filters = parseCondition(condition, tableName);
             
-            // Simple check for eq() in condition - this is a rough approximation
-            if (condition && typeof condition === 'object') {
-              const cond = condition as { left?: { column?: { name?: string; table?: { name?: string } } }; right?: unknown };
-              if (cond?.left?.column?.name === 'email' && cond.right) {
-                emailFilter = String(cond.right);
-              }
-              // Check for id column flexibly
-              const leftCol = cond?.left?.column;
-              const colName = leftCol?.name || leftCol?.table?.name;
-              if (colName === 'id' && cond.right && tableName === 'sessions') {
-                sessionIdFilter = String(cond.right);
-              }
-            }
+            const emailFilter = filters.email;
+            const sessionIdFilter = filters.sessionId;
+            const idFilter = filters.id;
+            const roleFilter = filters.role;
+            const verificationStatusFilter = filters.verificationStatus;
+            const statusFilter = filters.status;
             
             return {
               // Handle .limit()
@@ -111,18 +153,17 @@ const db = {
           // Handle .innerJoin()
           innerJoin: (table2: unknown, condition: unknown): MockResult => {
             const table2Name = getTableName(table2);
+            
+            // Parse condition to extract filter values
+            const filters = parseCondition(condition, tableName);
+            
+            const sessionId = filters.sessionId;
+            const userId = filters.userId;
+            const landlordId = filters.landlordId;
+            const propertyId = filters.propertyId;
+            
             return {
               where: (condition: unknown): MockResult => {
-                let sessionId: string | null = null;
-                if (condition && typeof condition === 'object') {
-                  const cond = condition as { left?: { column?: { name?: string; table?: { name?: string } } }; right?: unknown };
-                  // Check if this is a session ID lookup - be flexible about the column path
-                  const leftCol = cond?.left?.column;
-                  const colName = leftCol?.name || leftCol?.table?.name;
-                  if (colName === 'id' && cond.right) {
-                    sessionId = String(cond.right);
-                  }
-                }
                 return {
                   limit: (count: number): MockResult => {
                     // Check if this is a session lookup with user join
