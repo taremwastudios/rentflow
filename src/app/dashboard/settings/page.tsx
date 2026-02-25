@@ -113,19 +113,19 @@ export default function SettingsPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-10">
       <div>
-        <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">Settings</h1>
+        <h1 className="text-4xl font-black text-slate-900 dark:text-slate-100 tracking-tight transition-colors">Settings</h1>
         <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">Manage your personal preferences and account security</p>
       </div>
 
       {/* Appearance Section */}
-      <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 p-8 shadow-sm">
+      <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 p-8 shadow-sm transition-colors">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white">Appearance</h2>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Appearance</h2>
             <p className="text-slate-400 text-sm font-medium">Customize how RentFlow looks on your device</p>
           </div>
           
-          <div className="flex p-1.5 bg-slate-100 dark:bg-slate-800 rounded-2xl w-fit">
+          <div className="flex p-1.5 bg-slate-100 dark:bg-slate-950 rounded-2xl w-fit transition-colors">
             <button
               onClick={() => toggleTheme('light')}
               className={`flex items-center space-x-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${
@@ -141,7 +141,7 @@ export default function SettingsPage() {
               onClick={() => toggleTheme('dark')}
               className={`flex items-center space-x-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${
                 theme === 'dark' 
-                  ? 'bg-slate-700 text-white shadow-lg' 
+                  ? 'bg-slate-800 text-slate-100 shadow-lg' 
                   : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
               }`}
             >
@@ -153,8 +153,8 @@ export default function SettingsPage() {
       </div>
 
       {/* Profile Information */}
-      <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 p-8 shadow-sm">
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-8">Profile Information</h2>
+      <div className="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 p-8 shadow-sm transition-colors">
+        <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-8">Profile Information</h2>
         <form onSubmit={(e) => { e.preventDefault(); handleUpdateProfile(new FormData(e.currentTarget)); }} className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-2">
             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
@@ -163,7 +163,7 @@ export default function SettingsPage() {
               type="text"
               defaultValue={session.user.name}
               required
-              className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl text-slate-900 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+              className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-950/50 border border-slate-100 dark:border-slate-800 rounded-2xl text-slate-900 dark:text-slate-100 font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 dark:placeholder:text-slate-700"
             />
           </div>
           
@@ -173,7 +173,7 @@ export default function SettingsPage() {
               type="email"
               value={session.user.email}
               disabled
-              className="w-full px-6 py-4 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-400 font-bold cursor-not-allowed"
+              className="w-full px-6 py-4 bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl text-slate-400 font-bold cursor-not-allowed transition-colors"
             />
           </div>
 
@@ -184,14 +184,14 @@ export default function SettingsPage() {
               type="tel"
               placeholder="+256 700 000 000"
               defaultValue={profile?.phone || ""}
-              className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 rounded-2xl text-slate-900 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+              className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-950/50 border border-slate-100 dark:border-slate-800 rounded-2xl text-slate-900 dark:text-slate-100 font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 dark:placeholder:text-slate-700"
             />
           </div>
 
           <div className="md:col-span-2 pt-4">
             <button
               type="submit"
-              className="px-10 py-4 bg-emerald-600 text-white rounded-2xl font-bold shadow-xl shadow-emerald-200 hover:bg-emerald-700 transition-all active:scale-95"
+              className="px-10 py-4 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 transition-all active:scale-95 shadow-none"
             >
               Update Profile
             </button>
@@ -200,7 +200,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Danger Zone */}
-      <div className="bg-red-50/50 dark:bg-red-950/10 rounded-[2.5rem] border border-red-100 dark:border-red-900/30 p-8">
+      <div className="bg-red-50/50 dark:bg-red-950/20 rounded-[2.5rem] border border-red-100 dark:border-red-900/30 p-8 transition-colors">
         <h2 className="text-xl font-bold text-red-600 dark:text-red-400 mb-2">Danger Zone</h2>
         <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mb-6">Permanently delete your account and all associated data</p>
         <button className="px-8 py-3 border-2 border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 rounded-xl font-bold text-sm hover:bg-red-600 hover:text-white transition-all">

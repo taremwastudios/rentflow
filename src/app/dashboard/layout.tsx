@@ -31,7 +31,7 @@ export default async function DashboardLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex transition-colors duration-300">
       {/* Sidebar */}
       <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 flex flex-col fixed h-full z-40 hidden md:flex">
         <div className="p-6 border-b border-slate-100 dark:border-slate-800">
@@ -45,14 +45,14 @@ export default async function DashboardLayout({
 
         {/* User info */}
         <div className="p-4 border-b border-slate-100 dark:border-slate-800">
-          <div className="flex items-center gap-3 p-2 rounded-2xl bg-slate-50 dark:bg-slate-800/50">
-            <div className="w-9 h-9 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center border border-emerald-200 dark:border-emerald-800">
+          <div className="flex items-center gap-3 p-2 rounded-2xl bg-slate-50 dark:bg-slate-950/50">
+            <div className="w-9 h-9 bg-emerald-100 dark:bg-emerald-900/20 rounded-full flex items-center justify-center border border-emerald-200 dark:border-emerald-800">
               <span className="text-emerald-700 dark:text-emerald-400 font-bold text-sm">
                 {session.user.name.charAt(0).toUpperCase()}
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{session.user.name}</p>
+              <p className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate">{session.user.name}</p>
               <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 truncate uppercase tracking-wider">{session.user.role}</p>
             </div>
           </div>
