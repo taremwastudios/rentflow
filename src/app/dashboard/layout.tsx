@@ -45,7 +45,7 @@ export default async function DashboardLayout({
 
         {/* User info */}
         <div className="p-4 border-b border-slate-100 dark:border-emerald-500/20">
-          <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-emerald-500/5 border dark:border-emerald-500/10 transition-colors">
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-emerald-500/5 border dark:border-emerald-500/10 transition-colors">
             <div className="w-9 h-9 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center border border-emerald-200 dark:border-emerald-500/30">
               <span className="text-emerald-700 dark:text-emerald-400 font-bold text-sm">
                 {session.user.name.charAt(0).toUpperCase()}
@@ -64,7 +64,7 @@ export default async function DashboardLayout({
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:text-emerald-700 dark:hover:text-emerald-400 transition-all text-sm font-bold group"
+              className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 hover:text-emerald-700 dark:hover:text-emerald-400 transition-all text-sm font-bold group"
             >
               <span className="text-base group-hover:scale-110 transition-transform">{item.icon}</span>
               {item.label}
@@ -77,7 +77,7 @@ export default async function DashboardLayout({
           <form action={logoutUser}>
             <button
               type="submit"
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-400 dark:text-slate-500 hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400 transition-all text-sm font-bold group"
+              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-slate-400 dark:text-slate-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-all text-sm font-bold group"
             >
               <span className="group-hover:translate-x-1 transition-transform">🚪</span> Sign Out
             </button>
@@ -119,7 +119,7 @@ export default async function DashboardLayout({
       {/* Main content */}
       <main className="flex-1 md:ml-64 pt-0 md:pt-0">
         <div className="md:hidden h-14"></div>
-        <div className="p-4 md:p-10 min-h-screen">
+        <div className="p-4 md:p-8 min-h-screen">
           {children}
         </div>
         <div className="md:hidden h-16"></div>
