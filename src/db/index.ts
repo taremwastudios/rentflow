@@ -44,8 +44,10 @@ function getTableName(table: unknown): string {
 
 // The mock database object that mimics drizzle-orm's API
 const db = {
-  // Handle db.select({ field: table }) - can be called with an object of fields
+  // Handle db.select({ session: sessions, user: users }) or db.select() - can be called with an object of fields
   select: (fields?: unknown): MockResult => {
+    // If fields is provided like { session: sessions, user: users }, store it for innerJoin
+    const selectFields = fields;
     return {
       from: (table: unknown): MockResult => {
         const tableName = getTableName(table);
