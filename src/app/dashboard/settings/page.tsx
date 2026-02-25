@@ -34,25 +34,23 @@ export default function SettingsPage() {
   const [profile, setProfile] = useState<MockProfile | null>(null);
   const [session, setSession] = useState<MockSession | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
+  // Load and sync theme
   useEffect(() => {
-    // 1. Theme Sync
     const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) as 'light' | 'dark' | null;
-    const initialTheme = storedTheme || 'light';
-    setTheme(initialTheme);
+    const currentTheme = storedTheme || 'light';
+    setTheme(currentTheme);
     
-    if (initialTheme === 'dark') {
+    // Immediate DOM sync
+    if (currentTheme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
 
-    // 2. Data Fetch
     const fetchData = async () => {
       setLoading(true);
-      setError(null);
       try {
         const sessionResponse = await fetch('/api/auth/session');
         if (!sessionResponse.ok) throw new Error(`Session error: ${sessionResponse.status}`);
@@ -71,7 +69,6 @@ export default function SettingsPage() {
 
       } catch (fetchError: any) {
         console.error("Error fetching settings data:", fetchError);
-        setError("Failed to load settings. Please refresh or try again.");
       } finally {
         setLoading(false);
       }
@@ -84,6 +81,7 @@ export default function SettingsPage() {
     setTheme(newTheme);
     localStorage.setItem(THEME_STORAGE_KEY, newTheme);
     
+    // FORCE instant change on root
     if (newTheme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
@@ -121,24 +119,24 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto space-y-8">
       <div className="px-1 transition-colors">
-        <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Settings</h1>
+        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Settings</h1>
         <p className="text-slate-500 dark:text-emerald-500/60 mt-1 font-medium text-xs">Manage your personal preferences and account security</p>
       </div>
 
       {/* Appearance Section */}
-      <div className="bg-white dark:bg-slate-950 rounded-md border border-slate-100 dark:border-emerald-500/20 p-6 transition-colors shadow-sm dark:shadow-none">
+      <div className="bg-white dark:bg-slate-950 rounded-xl border border-slate-100 dark:border-emerald-500/20 p-6 transition-colors shadow-sm dark:shadow-none">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 transition-colors">
           <div>
-            <h2 className="text-md font-bold text-slate-900 dark:text-white">Appearance</h2>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white">Appearance</h2>
             <p className="text-slate-400 dark:text-emerald-500/40 text-[10px] font-medium">Customize how RentFlow looks on your device</p>
           </div>
           
           <div className="flex p-1 bg-slate-50 dark:bg-slate-900 rounded-md border dark:border-emerald-500/20 transition-colors">
             <button
               onClick={() => toggleTheme('light')}
-              className={`flex items-center space-x-2 px-4 py-1.5 rounded-sm font-bold text-[10px] uppercase tracking-wider transition-all ${
+              className={`flex items-center space-x-2 px-5 py-2 rounded-sm font-bold text-[10px] uppercase tracking-wider transition-all ${
                 theme === 'light' 
                   ? 'bg-white text-slate-900 shadow-sm' 
                   : 'text-slate-400 hover:text-slate-600 dark:text-emerald-500/40 dark:hover:text-emerald-400'
@@ -148,9 +146,9 @@ export default function SettingsPage() {
             </button>
             <button
               onClick={() => toggleTheme('dark')}
-              className={`flex items-center space-x-2 px-4 py-1.5 rounded-sm font-bold text-[10px] uppercase tracking-wider transition-all ${
+              className={`flex items-center space-x-2 px-5 py-2 rounded-sm font-bold text-[10px] uppercase tracking-wider transition-all ${
                 theme === 'dark' 
-                  ? 'bg-slate-800 text-white shadow-md' 
+                  ? 'bg-emerald-600 text-white shadow-emerald-500/20 shadow-md' 
                   : 'text-slate-400 hover:text-slate-600 dark:text-emerald-500/40 dark:hover:text-emerald-400'
               }`}
             >
@@ -161,7 +159,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Profile Information */}
-      <div className="bg-white dark:bg-slate-950 rounded-md border border-slate-100 dark:border-emerald-500/20 p-6 transition-colors shadow-sm dark:shadow-none">
+      <div className="bg-white dark:bg-slate-950 rounded-xl border border-slate-100 dark:border-emerald-500/20 p-6 transition-colors shadow-sm dark:shadow-none">
         <h2 className="text-md font-bold text-slate-900 dark:text-white mb-6 transition-colors">Profile Information</h2>
         <form action={handleUpdateProfile} className="grid grid-cols-1 md:grid-cols-2 gap-6 transition-colors">
           <div className="space-y-1">
