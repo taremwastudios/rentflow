@@ -184,30 +184,30 @@ export default function SubscriptionPage() {
   return (
     <div className="max-w-7xl mx-auto space-y-10 pb-20">
       {/* Header */}
-      <div>
-        <h1 className="text-4xl font-black text-slate-900 tracking-tight">Subscription</h1>
-        <p className="text-slate-500 mt-2 font-medium">
+      <div className="px-2">
+        <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight transition-colors">Subscription</h1>
+        <p className="text-slate-500 dark:text-emerald-500/60 mt-2 font-medium transition-colors">
           Scale your properties and manage your billing
         </p>
       </div>
 
       {/* Current Plan Status - New Premium Design */}
       <div className="relative group overflow-hidden">
-        <div className="absolute inset-0 bg-emerald-600 rounded-[2.5rem] rotate-0.5 group-hover:rotate-0 transition-transform duration-500 opacity-10"></div>
-        <div className="relative bg-white border border-emerald-100 rounded-[2.5rem] p-8 md:p-10 shadow-[0_15px_40px_-15px_rgba(16,185,129,0.1)]">
+        <div className="absolute inset-0 bg-emerald-600 rounded-[2.5rem] rotate-0.5 group-hover:rotate-0 transition-transform duration-500 opacity-10 dark:opacity-5"></div>
+        <div className="relative bg-white dark:bg-slate-950 border border-emerald-100 dark:border-emerald-500/20 rounded-[2.5rem] p-8 md:p-10 shadow-[0_15px_40px_-15px_rgba(16,185,129,0.1)] dark:shadow-none transition-colors">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div className="flex items-center space-x-6">
-              <div className="w-16 h-16 bg-emerald-50 rounded-3xl flex items-center justify-center flex-shrink-0">
-                <svg className="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-500/10 rounded-3xl flex items-center justify-center flex-shrink-0 transition-colors">
+                <svg className="w-8 h-8 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                 </svg>
               </div>
               <div>
-                <div className="inline-flex items-center px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-black uppercase tracking-widest rounded-full mb-2">
+                <div className="inline-flex items-center px-3 py-1 bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-[10px] font-black uppercase tracking-widest rounded-full mb-2 transition-colors">
                   Active Plan
                 </div>
-                <h2 className="text-3xl font-black text-slate-900">{currentPlan?.name || "Free"}</h2>
-                <p className="text-slate-400 font-bold text-sm">
+                <h2 className="text-3xl font-black text-slate-900 dark:text-white transition-colors">{currentPlan?.name || "Free"}</h2>
+                <p className="text-slate-400 dark:text-emerald-500/40 font-bold text-sm transition-colors">
                   {currentPlan?.priceMonthly === 0
                     ? "Free forever for starters"
                     : `${currentPlan?.priceMonthly?.toLocaleString()} UGX / month`}
@@ -216,15 +216,15 @@ export default function SubscriptionPage() {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <div className="bg-slate-50 px-6 py-4 rounded-3xl border border-slate-100">
-                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Properties</div>
-                <div className="text-xl font-black text-slate-800">
+              <div className="bg-slate-50 dark:bg-emerald-500/5 px-6 py-4 rounded-3xl border border-slate-100 dark:border-emerald-500/10 transition-colors">
+                <div className="text-[10px] font-bold text-slate-400 dark:text-emerald-500/40 uppercase tracking-widest mb-1">Properties</div>
+                <div className="text-xl font-black text-slate-800 dark:text-white transition-colors">
                   {currentPlan?.propertyLimit === -1 ? "Unlimited" : currentPlan?.propertyLimit}
                 </div>
               </div>
-              <div className="bg-slate-50 px-6 py-4 rounded-3xl border border-slate-100">
-                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Units</div>
-                <div className="text-xl font-black text-slate-800">
+              <div className="bg-slate-50 dark:bg-emerald-500/5 px-6 py-4 rounded-3xl border border-slate-100 dark:border-emerald-500/10 transition-colors">
+                <div className="text-[10px] font-bold text-slate-400 dark:text-emerald-500/40 uppercase tracking-widest mb-1">Total Units</div>
+                <div className="text-xl font-black text-slate-800 dark:text-white transition-colors">
                   {currentPlan?.unitLimit === -1 ? "Unlimited" : currentPlan?.unitLimit}
                 </div>
               </div>
@@ -235,7 +235,7 @@ export default function SubscriptionPage() {
 
       {/* Upgrade Plans - Grid Layout */}
       <div className="space-y-6">
-        <h3 className="text-xl font-bold text-slate-900 ml-2">Choose a plan that fits your growth</h3>
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white ml-2 transition-colors">Choose a plan that fits your growth</h3>
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {plans.map((plan) => {
             const isCurrentPlan = plan.id === currentPlan?.id;
@@ -243,31 +243,31 @@ export default function SubscriptionPage() {
             return (
               <div
                 key={plan.id}
-                className={`relative flex flex-col bg-white rounded-[2rem] transition-all duration-500 group ${
+                className={`relative flex flex-col bg-white dark:bg-slate-950 rounded-[2rem] transition-all duration-500 group ${
                   isCurrentPlan 
-                    ? "ring-2 ring-emerald-500 shadow-[0_20px_50px_-12px_rgba(16,185,129,0.15)] scale-105 z-10" 
-                    : "border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-2"
+                    ? "ring-2 ring-emerald-500 shadow-[0_20px_50px_-12px_rgba(16,185,129,0.15)] dark:shadow-none scale-105 z-10" 
+                    : "border border-slate-100 dark:border-emerald-500/20 shadow-sm dark:shadow-none hover:shadow-xl dark:hover:shadow-none hover:-translate-y-2"
                 }`}
               >
                 {isCurrentPlan && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-emerald-600 text-white text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-emerald-200">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-emerald-600 text-white text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-emerald-200 dark:shadow-none transition-all">
                     Your current plan
                   </div>
                 )}
 
                 <div className="p-6 flex flex-col h-full">
-                  <h4 className="text-lg font-bold text-slate-800 mb-1">{plan.name}</h4>
-                  <p className="text-slate-400 text-xs font-medium leading-relaxed mb-6 h-8 overflow-hidden">
+                  <h4 className="text-lg font-bold text-slate-800 dark:text-white mb-1 transition-colors">{plan.name}</h4>
+                  <p className="text-slate-400 dark:text-emerald-500/40 text-xs font-medium leading-relaxed mb-6 h-8 overflow-hidden transition-colors">
                     {plan.description}
                   </p>
 
                   <div className="mb-8">
                     <div className="flex items-baseline">
-                      <span className="text-2xl font-black text-slate-900 tracking-tight">
+                      <span className="text-2xl font-black text-slate-900 dark:text-white tracking-tight transition-colors">
                         {plan.priceMonthly === 0 ? "Free" : `${plan.priceMonthly?.toLocaleString()}`}
                       </span>
                       {plan.priceMonthly > 0 && (
-                        <span className="text-slate-400 text-[10px] font-bold ml-1 uppercase">UGX/mo</span>
+                        <span className="text-slate-400 dark:text-emerald-500/40 text-[10px] font-bold ml-1 uppercase transition-colors">UGX/mo</span>
                       )}
                     </div>
                   </div>
@@ -275,9 +275,9 @@ export default function SubscriptionPage() {
                   <div className="flex-grow">
                     <ul className="space-y-4 mb-8">
                       {plan.features.slice(0, 5).map((feature, i) => (
-                        <li key={i} className="flex items-start text-xs text-slate-600 group/item">
-                          <div className="mr-2 mt-0.5 w-4 h-4 rounded-full bg-emerald-50 flex items-center justify-center flex-shrink-0 group-hover/item:bg-emerald-100 transition-colors">
-                            <svg className="w-2 h-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <li key={i} className="flex items-start text-xs text-slate-600 dark:text-slate-300 group/item transition-colors">
+                          <div className="mr-2 mt-0.5 w-4 h-4 rounded-full bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-emerald-100 dark:group-hover/item:bg-emerald-500/20 transition-colors">
+                            <svg className="w-2 h-2 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
                             </svg>
                           </div>
@@ -292,8 +292,8 @@ export default function SubscriptionPage() {
                     disabled={isCurrentPlan}
                     className={`block w-full text-center py-3.5 rounded-2xl font-bold text-xs transition-all active:scale-95 ${
                       isCurrentPlan
-                        ? "bg-slate-50 text-slate-400 cursor-default"
-                        : "bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg shadow-emerald-100 hover:shadow-emerald-200"
+                        ? "bg-slate-50 dark:bg-emerald-500/5 text-slate-400 dark:text-emerald-500/20 cursor-default"
+                        : "bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg shadow-emerald-100 dark:shadow-none hover:shadow-emerald-200"
                     }`}
                   >
                     {isCurrentPlan ? "Current Active Plan" : "Switch to this Plan"}
@@ -307,16 +307,16 @@ export default function SubscriptionPage() {
 
       {/* Payment Modal Redesign */}
       {showPaymentModal && (
-        <div className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-[2.5rem] max-w-md w-full p-10 shadow-2xl animate-in fade-in zoom-in duration-300">
+        <div className="fixed inset-0 z-[100] bg-slate-900/40 dark:bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 transition-colors">
+          <div className="bg-white dark:bg-slate-950 rounded-[2.5rem] border border-transparent dark:border-emerald-500/20 max-w-md w-full p-10 shadow-2xl dark:shadow-none animate-in fade-in zoom-in duration-300">
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h3 className="text-2xl font-black text-slate-900">Upgrade Plan</h3>
-                <p className="text-slate-500 text-sm">Review your selection</p>
+                <h3 className="text-2xl font-black text-slate-900 dark:text-white transition-colors">Upgrade Plan</h3>
+                <p className="text-slate-500 dark:text-emerald-500/60 text-sm font-medium transition-colors">Review your selection</p>
               </div>
               <button
                 onClick={() => setShowPaymentModal(false)}
-                className="w-10 h-10 flex items-center justify-center rounded-2xl bg-slate-50 text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all"
+                className="w-10 h-10 flex items-center justify-center rounded-2xl bg-slate-50 dark:bg-emerald-500/10 text-slate-400 dark:text-emerald-400 hover:text-slate-900 dark:hover:text-white transition-all"
               >
                 ✕
               </button>
@@ -325,7 +325,7 @@ export default function SubscriptionPage() {
             <div className="space-y-6">
               {/* Billing Cycle */}
               <div>
-                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">
+                <label className="block text-[10px] font-bold text-slate-400 dark:text-emerald-500/40 uppercase tracking-widest mb-3 transition-colors">
                   Billing Cycle
                 </label>
                 <div className="grid grid-cols-2 gap-3">
@@ -335,8 +335,8 @@ export default function SubscriptionPage() {
                       onClick={() => setBillingCycle(cycle as any)}
                       className={`py-3 px-4 rounded-2xl font-bold text-sm border-2 transition-all ${
                         billingCycle === cycle
-                          ? "border-emerald-600 bg-emerald-50 text-emerald-700"
-                          : "border-slate-100 text-slate-400 hover:border-slate-200"
+                          ? "border-emerald-600 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                          : "border-slate-100 dark:border-emerald-500/5 text-slate-400 dark:text-emerald-500/20 hover:border-slate-200 dark:hover:border-emerald-500/20"
                       }`}
                     >
                       {cycle.charAt(0).toUpperCase() + cycle.slice(1)}
@@ -346,18 +346,18 @@ export default function SubscriptionPage() {
               </div>
 
               {/* Payment Summary */}
-              <div className="bg-slate-50 rounded-3xl p-6 space-y-3">
+              <div className="bg-slate-50 dark:bg-emerald-500/5 rounded-3xl p-6 space-y-3 transition-colors">
                 <div className="flex justify-between items-center text-sm font-bold">
-                  <span className="text-slate-400">Plan</span>
-                  <span className="text-slate-900">{selectedPlan?.name}</span>
+                  <span className="text-slate-400 dark:text-emerald-500/40 transition-colors">Plan</span>
+                  <span className="text-slate-900 dark:text-white transition-colors">{selectedPlan?.name}</span>
                 </div>
-                <div className="flex justify-between items-center text-sm font-bold border-t border-slate-200/50 pt-3">
-                  <span className="text-slate-400">Total Due</span>
+                <div className="flex justify-between items-center text-sm font-bold border-t border-slate-200/50 dark:border-emerald-500/10 pt-3 transition-colors">
+                  <span className="text-slate-400 dark:text-emerald-500/40 transition-colors">Total Due</span>
                   <div className="text-right">
-                    <span className="text-lg text-emerald-600 font-black">
+                    <span className="text-lg text-emerald-600 dark:text-emerald-400 font-black transition-colors">
                       {(billingCycle === "annually" ? selectedPlan?.priceAnnually : selectedPlan?.priceMonthly)?.toLocaleString()} UGX
                     </span>
-                    <p className="text-[10px] text-slate-400 uppercase">per {billingCycle === "annually" ? "year" : "month"}</p>
+                    <p className="text-[10px] text-slate-400 dark:text-emerald-500/40 uppercase transition-colors">per {billingCycle === "annually" ? "year" : "month"}</p>
                   </div>
                 </div>
               </div>
@@ -366,7 +366,7 @@ export default function SubscriptionPage() {
               <button
                 onClick={handlePayment}
                 disabled={processingPayment}
-                className="w-full py-5 bg-emerald-600 text-white rounded-[1.5rem] font-bold shadow-xl shadow-emerald-200 hover:bg-emerald-700 hover:shadow-emerald-300 transition-all active:scale-95 disabled:bg-slate-200 disabled:shadow-none"
+                className="w-full py-5 bg-emerald-600 text-white rounded-[1.5rem] font-bold shadow-xl shadow-emerald-200 dark:shadow-none hover:bg-emerald-700 dark:hover:bg-emerald-500 transition-all active:scale-95 disabled:bg-slate-200 dark:disabled:bg-emerald-500/10 disabled:shadow-none"
               >
                 {processingPayment ? (
                   <div className="flex items-center justify-center space-x-2">
@@ -378,7 +378,7 @@ export default function SubscriptionPage() {
                 )}
               </button>
               
-              <p className="text-center text-[10px] text-slate-400 font-medium">
+              <p className="text-center text-[10px] text-slate-400 dark:text-emerald-500/40 font-medium transition-colors">
                 Payments are securely processed via NOWPayments crypto bridge.
               </p>
             </div>

@@ -48,25 +48,23 @@ export default async function RemindersPage() {
   const past = reminderList.filter((r) => r.scheduledAt < now || r.status !== "pending");
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Reminders</h1>
-          <p className="text-gray-500 mt-1">Set payment reminders and notifications</p>
-        </div>
+    <div className="max-w-4xl mx-auto space-y-10">
+      <div className="px-2">
+        <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight transition-colors">Reminders</h1>
+        <p className="text-slate-500 dark:text-emerald-500/60 mt-2 font-medium transition-colors">Set payment reminders and automated notifications</p>
       </div>
 
       {/* Create Reminder Form */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-8">
-        <h2 className="font-semibold text-gray-900 mb-5">Create New Reminder</h2>
-        <form action={createReminder} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Type</label>
+      <div className="bg-white dark:bg-slate-950 rounded-[2.5rem] border border-slate-100 dark:border-emerald-500/20 p-8 shadow-sm dark:shadow-none transition-colors">
+        <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-8 transition-colors">Create New Reminder</h2>
+        <form action={createReminder} className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-400 dark:text-emerald-500 uppercase tracking-widest ml-1 transition-colors">Type</label>
               <select
                 name="type"
                 required
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-emerald-500/20 rounded-2xl text-slate-900 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all appearance-none"
               >
                 <option value="rent_due">Rent Due</option>
                 <option value="rent_overdue">Rent Overdue</option>
@@ -75,11 +73,11 @@ export default async function RemindersPage() {
                 <option value="custom">Custom</option>
               </select>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Tenant (Optional)</label>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-slate-400 dark:text-emerald-500 uppercase tracking-widest ml-1 transition-colors">Recipient</label>
               <select
                 name="tenantId"
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-emerald-500/20 rounded-2xl text-slate-900 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all appearance-none"
               >
                 <option value="">All tenants / General</option>
                 {tenantList.map((t) => (
@@ -91,41 +89,41 @@ export default async function RemindersPage() {
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Title <span className="text-red-500">*</span></label>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-400 dark:text-emerald-500 uppercase tracking-widest ml-1 transition-colors">Title</label>
             <input
               name="title"
               type="text"
               required
               placeholder="e.g. Rent Due Reminder — January 2025"
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-emerald-500/20 rounded-2xl text-slate-900 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 dark:placeholder:text-emerald-900"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Message <span className="text-red-500">*</span></label>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-400 dark:text-emerald-500 uppercase tracking-widest ml-1 transition-colors">Message</label>
             <textarea
               name="message"
               required
               rows={3}
-              placeholder="Dear tenant, this is a reminder that your rent is due on the 1st of this month..."
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+              placeholder="Dear tenant, this is a reminder that your rent is due..."
+              className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-emerald-500/20 rounded-2xl text-slate-900 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all placeholder:text-slate-300 dark:placeholder:text-emerald-900 resize-none"
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Schedule Date & Time <span className="text-red-500">*</span></label>
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-slate-400 dark:text-emerald-500 uppercase tracking-widest ml-1 transition-colors">Schedule</label>
             <input
               name="scheduledAt"
               type="datetime-local"
               required
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-emerald-500/20 rounded-2xl text-slate-900 dark:text-white font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all color-scheme-light dark:color-scheme-dark"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition-colors"
+            className="w-full py-5 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-500/20 hover:bg-emerald-700 dark:shadow-none transition-all active:scale-95"
           >
             Create Reminder
           </button>
@@ -134,22 +132,22 @@ export default async function RemindersPage() {
 
       {/* Upcoming Reminders */}
       {upcoming.length > 0 && (
-        <div className="mb-6">
-          <h2 className="font-semibold text-gray-900 mb-4">Upcoming ({upcoming.length})</h2>
-          <div className="space-y-3">
+        <div className="space-y-6">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white ml-2 transition-colors">Upcoming ({upcoming.length})</h2>
+          <div className="grid gap-4">
             {upcoming.map((reminder) => (
-              <div key={reminder.id} className="bg-white rounded-2xl border border-yellow-200 bg-yellow-50 p-5">
-                <div className="flex items-start justify-between">
+              <div key={reminder.id} className="bg-white dark:bg-slate-950 rounded-[2rem] border border-yellow-200 dark:border-emerald-500/20 p-8 shadow-sm dark:shadow-none transition-colors">
+                <div className="flex items-start gap-6">
+                  <div className="w-12 h-12 bg-yellow-100 dark:bg-emerald-500/10 rounded-2xl flex items-center justify-center text-2xl transition-colors">🔔</div>
                   <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-lg">🔔</span>
-                      <h3 className="font-medium text-gray-900">{reminder.title}</h3>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${getStatusColor(reminder.status)}`}>
+                    <div className="flex items-center gap-3 mb-2">
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-white transition-colors">{reminder.title}</h3>
+                      <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${getStatusColor(reminder.status)}`}>
                         {reminder.status}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">{reminder.message}</p>
-                    <p className="text-xs text-gray-400">Scheduled: {formatDate(reminder.scheduledAt)}</p>
+                    <p className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-4 transition-colors">{reminder.message}</p>
+                    <p className="text-[10px] font-black text-slate-400 dark:text-emerald-500 uppercase tracking-widest transition-colors">Scheduled: {formatDate(reminder.scheduledAt)}</p>
                   </div>
                 </div>
               </div>
@@ -160,22 +158,19 @@ export default async function RemindersPage() {
 
       {/* Past Reminders */}
       {past.length > 0 && (
-        <div>
-          <h2 className="font-semibold text-gray-900 mb-4">Past Reminders ({past.length})</h2>
-          <div className="space-y-3">
+        <div className="space-y-6 opacity-60">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white ml-2 transition-colors">History</h2>
+          <div className="grid gap-4">
             {past.map((reminder) => (
-              <div key={reminder.id} className="bg-white rounded-2xl border border-gray-100 p-5 opacity-70">
-                <div className="flex items-start justify-between">
+              <div key={reminder.id} className="bg-white dark:bg-slate-950 rounded-[2rem] border border-slate-100 dark:border-emerald-500/10 p-8 transition-colors">
+                <div className="flex items-center justify-between">
                   <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-medium text-gray-700">{reminder.title}</h3>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${getStatusColor(reminder.status)}`}>
-                        {reminder.status}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-500">{reminder.message}</p>
-                    <p className="text-xs text-gray-400 mt-1">Scheduled: {formatDate(reminder.scheduledAt)}</p>
+                    <h3 className="text-sm font-bold text-slate-700 dark:text-slate-200 transition-colors">{reminder.title}</h3>
+                    <p className="text-xs font-medium text-slate-500 dark:text-emerald-500/40 mt-1 transition-colors">{formatDate(reminder.scheduledAt)}</p>
                   </div>
+                  <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${getStatusColor(reminder.status)}`}>
+                    {reminder.status}
+                  </span>
                 </div>
               </div>
             ))}
@@ -184,9 +179,9 @@ export default async function RemindersPage() {
       )}
 
       {reminderList.length === 0 && (
-        <div className="text-center py-12 text-gray-400">
-          <div className="text-4xl mb-3">🔔</div>
-          <p className="text-sm">No reminders yet. Create one above to get started.</p>
+        <div className="text-center py-20 transition-colors">
+          <div className="w-20 h-20 bg-slate-50 dark:bg-emerald-500/5 rounded-[2.5rem] flex items-center justify-center text-4xl mx-auto mb-6 opacity-30 transition-colors">🔔</div>
+          <p className="text-slate-400 font-bold text-sm uppercase tracking-widest transition-colors">No reminders yet</p>
         </div>
       )}
     </div>

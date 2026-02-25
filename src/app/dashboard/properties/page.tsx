@@ -26,66 +26,72 @@ export default async function PropertiesPage() {
     .orderBy(properties.createdAt);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
+    <div className="max-w-7xl mx-auto space-y-10">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">My Properties</h1>
-          <p className="text-gray-500 mt-1">Manage your property listings</p>
+          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight transition-colors">My Properties</h1>
+          <p className="text-slate-500 dark:text-emerald-500/60 mt-2 font-medium transition-colors">Manage your property listings and units</p>
         </div>
         <Link
           href="/dashboard/properties/new"
-          className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-emerald-700 transition-colors flex items-center gap-2"
+          className="bg-emerald-600 text-white px-8 py-3.5 rounded-2xl font-bold shadow-xl shadow-emerald-500/20 hover:bg-emerald-700 dark:shadow-none transition-all active:scale-95 flex items-center justify-center gap-2"
         >
           <span>+</span> Add Property
         </Link>
       </div>
 
       {props.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-gray-100 p-16 text-center">
-          <div className="text-5xl mb-4">🏠</div>
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">No properties yet</h3>
-          <p className="text-gray-500 mb-6 max-w-sm mx-auto">
+        <div className="bg-white dark:bg-slate-950 rounded-[3rem] border border-slate-100 dark:border-emerald-500/20 p-20 text-center transition-colors">
+          <div className="w-20 h-20 bg-slate-50 dark:bg-emerald-500/5 rounded-[2.5rem] flex items-center justify-center text-4xl mx-auto mb-6 transition-colors">🏠</div>
+          <h3 className="text-2xl font-bold text-slate-800 dark:text-white mb-3 transition-colors">No properties yet</h3>
+          <p className="text-slate-500 dark:text-emerald-500/60 mb-10 max-w-sm mx-auto font-medium transition-colors">
             Add your first property to start managing tenants, tracking rent, and listing on the platform.
           </p>
           <Link
             href="/dashboard/properties/new"
-            className="bg-emerald-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-emerald-700 transition-colors"
+            className="bg-emerald-600 text-white px-10 py-4 rounded-2xl font-bold shadow-xl shadow-emerald-500/20 hover:bg-emerald-700 dark:shadow-none transition-all active:scale-95"
           >
             Add Your First Property
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {props.map((property) => (
-            <div key={property.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-md transition-all">
-              <div className="h-40 bg-gradient-to-br from-emerald-100 to-teal-100 flex items-center justify-center">
+            <div key={property.id} className="bg-white dark:bg-slate-950 rounded-[2.5rem] border border-slate-100 dark:border-emerald-500/20 overflow-hidden hover:shadow-xl dark:hover:shadow-none hover:-translate-y-1 transition-all group">
+              <div className="h-48 bg-slate-100 dark:bg-emerald-500/5 flex items-center justify-center relative transition-colors">
                 {property.coverImageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={property.coverImageUrl} alt={property.title} className="w-full h-full object-cover" />
                 ) : (
-                  <span className="text-4xl">🏠</span>
+                  <span className="text-5xl opacity-20 dark:opacity-10 grayscale dark:grayscale-0">🏠</span>
                 )}
-              </div>
-              <div className="p-5">
-                <div className="flex items-start justify-between mb-2">
-                  <h3 className="font-semibold text-gray-900">{property.title}</h3>
-                  <span className={`text-xs px-2 py-1 rounded-full ${property.isPublished ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+                <div className="absolute top-4 right-4">
+                  <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full backdrop-blur-md shadow-lg transition-colors ${property.isPublished ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30" : "bg-slate-500/20 text-slate-600 dark:text-slate-400 border border-slate-500/30"}`}>
                     {property.isPublished ? "Published" : "Draft"}
                   </span>
                 </div>
-                <p className="text-gray-500 text-sm">📍 {property.address}, {property.city}</p>
-                <p className="text-gray-400 text-xs mt-1 capitalize">{property.propertyType} • {property.totalUnits} units</p>
+              </div>
+              <div className="p-8">
+                <div className="mb-4">
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white transition-colors">{property.title}</h3>
+                  <p className="text-slate-400 dark:text-emerald-500/40 text-xs font-bold uppercase tracking-widest mt-1 transition-colors">📍 {property.address}, {property.city}</p>
+                </div>
+                
+                <div className="flex items-center gap-4 text-xs font-bold text-slate-500 dark:text-slate-400 mb-8 transition-colors">
+                  <span className="bg-slate-50 dark:bg-emerald-500/5 px-3 py-1.5 rounded-lg border border-transparent dark:border-emerald-500/10 transition-colors uppercase tracking-tight">{property.propertyType}</span>
+                  <span className="bg-slate-50 dark:bg-emerald-500/5 px-3 py-1.5 rounded-lg border border-transparent dark:border-emerald-500/10 transition-colors uppercase tracking-tight">{property.totalUnits} units</span>
+                </div>
 
-                <div className="flex gap-2 mt-4">
+                <div className="flex gap-3">
                   <Link
                     href={`/dashboard/properties/${property.id}`}
-                    className="flex-1 text-center py-2 bg-emerald-50 text-emerald-700 rounded-lg text-sm font-medium hover:bg-emerald-100 transition-colors"
+                    className="flex-1 text-center py-3.5 bg-emerald-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-emerald-700 transition-all active:scale-95 shadow-lg shadow-emerald-500/10 dark:shadow-none"
                   >
                     Manage
                   </Link>
                   <Link
                     href={`/dashboard/properties/${property.id}/units`}
-                    className="flex-1 text-center py-2 bg-gray-50 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors"
+                    className="flex-1 text-center py-3.5 bg-slate-50 dark:bg-transparent text-slate-600 dark:text-emerald-500 border border-slate-100 dark:border-emerald-500/20 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-slate-100 dark:hover:bg-emerald-500/5 transition-all active:scale-95"
                   >
                     Units
                   </Link>
