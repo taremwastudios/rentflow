@@ -44,8 +44,8 @@ function getTableName(table: unknown): string {
 
 // The mock database object that mimics drizzle-orm's API
 const db = {
-  // Handle db.select() - can be called with or without fields
-  select: (...args: unknown[]): MockResult => {
+  // Handle db.select({ field: table }) - can be called with an object of fields
+  select: (fields?: unknown): MockResult => {
     return {
       from: (table: unknown): MockResult => {
         const tableName = getTableName(table);
@@ -55,12 +55,16 @@ const db = {
           where: (condition: unknown): MockResult => {
             // Try to extract the email from the condition for user queries
             let emailFilter: string | null = null;
+            let sessionIdFilter: string | null = null;
             
             // Simple check for eq() in condition - this is a rough approximation
             if (condition && typeof condition === 'object') {
               const cond = condition as { left?: { column?: { name?: string } }; right?: unknown };
               if (cond?.left?.column?.name === 'email' && cond.right) {
                 emailFilter = String(cond.right);
+              }
+              if (cond?.left?.column?.name === 'id' && cond.right && tableName === 'sessions') {
+                sessionIdFilter = String(cond.right);
               }
             }
             
@@ -72,6 +76,14 @@ const db = {
                   const user = DEMO_USERS.find(u => u.email === emailFilter);
                   return user ? [user] : [];
                 }
+                // For sessions table with id filter, return matching session
+                if (tableName === 'sessions' && sessionIdFilter) {
+                  const session = sessions.get(sessionIdFilter);
+                  if (session && session.expiresAt > new Date()) {
+                    return [session];
+                  }
+                  return [];
+                }
                 return [];
               },
               // Handle execute without limit - return array
@@ -80,39 +92,56 @@ const db = {
                   const user = DEMO_USERS.find(u => u.email === emailFilter);
                   return user ? [user] : [];
                 }
+                if (tableName === 'sessions' && sessionIdFilter) {
+                  const session = sessions.get(sessionIdFilter);
+                  if (session && session.expiresAt > new Date()) {
+                    return [session];
+                  }
+                  return [];
+                }
                 return [];
               },
             };
           },
           // Handle .innerJoin()
           innerJoin: (table2: unknown, condition: unknown): MockResult => {
+            const table2Name = getTableName(table2);
             return {
               where: (condition: unknown): MockResult => {
+                let sessionId: string | null = null;
+                if (condition && typeof condition === 'object') {
+                  const cond = condition as { left?: { column?: { name?: string } }; right?: unknown };
+                  if (cond?.left?.column?.name === 'id' && cond.right) {
+                    sessionId = String(cond.right);
+                  }
+                }
                 return {
                   limit: (count: number): MockResult => {
                     // Check if this is a session lookup with user join
-                    if (tableName === 'sessions') {
-                      // Try to find the session
-                      let sessionId: string | null = null;
-                      if (condition && typeof condition === 'object') {
-                        const cond = condition as { left?: { column?: { name?: string } }; right?: unknown };
-                        if (cond?.left?.column?.name === 'id' && cond.right) {
-                          sessionId = String(cond.right);
-                        }
-                      }
-                      if (sessionId) {
-                        const session = sessions.get(sessionId);
-                        if (session && session.expiresAt > new Date()) {
-                          const user = DEMO_USERS.find(u => u.id === session.userId);
-                          if (user) {
-                            return [{ session, user }];
-                          }
+                    if (tableName === 'sessions' && table2Name === 'users' && sessionId) {
+                      const session = sessions.get(sessionId);
+                      if (session && session.expiresAt > new Date()) {
+                        const user = DEMO_USERS.find(u => u.id === session.userId);
+                        if (user) {
+                          // Return the joined result in the format drizzle returns
+                          return [{ session, user }];
                         }
                       }
                     }
                     return [];
                   },
-                  execute: (): MockResult[] => [],
+                  execute: (): MockResult[] => {
+                    if (tableName === 'sessions' && table2Name === 'users' && sessionId) {
+                      const session = sessions.get(sessionId);
+                      if (session && session.expiresAt > new Date()) {
+                        const user = DEMO_USERS.find(u => u.id === session.userId);
+                        if (user) {
+                          return [{ session, user }];
+                        }
+                      }
+                    }
+                    return [];
+                  },
                 };
               },
             };
